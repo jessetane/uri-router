@@ -95,8 +95,7 @@ function push(location, replace, back, stack) {
     window.history.replaceState(historyPosition, null, location.href);
   }
   else {
-    historyPosition++;
-    window.history.pushState(historyPosition, null, location.href);
+    window.history.pushState(++historyPosition, null, location.href);
   }
 
   updateAll(location, back, stack);
