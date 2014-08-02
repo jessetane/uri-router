@@ -1,10 +1,11 @@
 # uri-router
 a small framework for building URI driven DOM applications.
 
-[![browser support](http://ci.testling.com/jessetane/ui-router.png)](http://ci.testling.com/jessetane/ui-router)
+[![browser support](http://ci.testling.com/jessetane/uri-router.png)](http://ci.testling.com/jessetane/uri-router)
 
 ## why
-uri-as-god :
+loose ideas for a better pushState router:
+
 * push the history for _all_ URI changes unless explicitly told otherwise
 * capture and prevent default link-click and form-submit behaviors
 * be nestable and have an adjustable root to maximize module-pattern compatibility
