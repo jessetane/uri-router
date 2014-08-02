@@ -7,14 +7,15 @@
   "devDependencies": {
     "browserify": "^5.9.1",
     "hyperglue2": "jessetane/hyperglue2#boundary",
-    "inherits": "^2.0.1"
+    "inherits": "^2.0.1",
+    "tape": "^2.13.4"
   },
   "scripts": {
     "example": "node example"
   },
-  "testling" : {
-    "files" : "test/index.js",
-    "browsers" : [
+  "testling": {
+    "files": "test/index.js",
+    "browsers": [
       "ie/8..latest",
       "ff/24..latest",
       "chrome/25..latest",
