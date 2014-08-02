@@ -11,7 +11,7 @@ some loose ideas for a better pushState router:
 * have a simple, optional callback mechanism to support transitions
 * allow web-components or backbone-style classes to be used as views
 
-1.0.0 is a first pass at exploring these ideas. As of this writing it's only been used to make the example app, so there are probably tons of bugs and inefficiencies :)
+1.0.0 is a first pass at exploring these ideas. as of this writing it's only been used to make the example app, so there are probably tons of bugs and inefficiencies :)
 
 ## how
 index.html
