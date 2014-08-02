@@ -152,7 +152,7 @@ should be set to the name of a property on `window.location`, generally "pathnam
 
 ### `r.routes`
 a hash like `{ 'regex': view }`. where views can either be web components or backbone-style (newable javascript class where the instance has an `el` property). 
-> views can optionally define `show()` and `hide()` methods, see [delegated events](#delegated events) for more details.
+> views can optionally define `show()` and `hide()` methods, see [delegated events](#delegated-events) for more details.
 
 ### `r.outlet`
 a DOM element. if an outlet is specified, whenever a new view in `routes` is matched, the old view will be removed and the new one appended to the outlet.
