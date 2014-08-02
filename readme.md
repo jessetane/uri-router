@@ -1,5 +1,4 @@
 # uri-router
-***
 a small framework for building URI driven DOM applications.
 
 ## why
@@ -107,80 +106,79 @@ the example above is super basic, do `node example` to see fancier stuff `uri-ro
 ## install
 `git clone https://github.com/jessetane/uri-router`  
 
-## API
+## require
 
-### require
-
-* ### `var Router = require('uri-router')`
+### `var Router = require('uri-router')`
 returns a constructor function for creating routers. the first time `uri-router` is required, it will globally hijack all link clicks and form submissions targeting the origin domain and start listening for the `window.history.onpopstate` event.
 
-### static methods
+## static methods
 
-* ### `Router.push(location, [replace])`
+### `Router.push(location, [replace])`  
 update `window.location`.
   * `location` href string
   * `replace` boolean; indicates to use replaceState instead of pushState
 
-* ### `Router.pop()`
+### `Router.pop()`
 alias of `window.history.back()`.
 
-* ### `Router.search(params, [replace])`
+### `Router.search(params, [replace])`  
 update `window.location.search` without clobbering existing parameters.
 > example: assuming the search string is set to `?a=1`, calling `Router.search({ b: 2 })` would change it to `?a=1&b=2`.
 
-### instance methods
+## instance methods
 
-* ### `var r = new Router([opts])`
+### `var r = new Router([opts])`
 the constructor function. `opts` is a hash that gets merged with the router instance `r`. see [properties](#properties) for more details.
 
-* ### `r.push(locationComponent, [replace, [stack]])`
-a wrapper around `Router.push` that will only update `window.location[r.watch]`. 
-> example: assuming `window.location.href` is "/some/path?a=b#one", and `r.watch` is "hash", `r.push('#two')` would update the href to "/some/path?a=b#two"
- 
- * `locationComponent` href component string (e.g. '#some-hash')
- * `replace` boolean; use replaceState
- * `stack` boolean; do not remove current view even if the instance has an outlet
+### `r.push(locationComponent, [replace, [stack]])`
+a wrapper around `Router.push` that will only update `window.location[r.watch]`.
+  
+  * `locationComponent` href component string (e.g. '#some-hash')
+  * `replace` boolean; use replaceState
+  * `stack` boolean; do not remove current view even if the instance has an outlet
 
-* ### `r.pop([replace])`
+> example: assuming `window.location.href` is "/some/path?a=b#one", and `r.watch` is "hash", `r.push('#two')` would update the href to "/some/path?a=b#two"
+
+### `r.pop([replace])`
 like pressing the back button, but only for the component of the url the instance is watching.
 
-* ### `r.destroy()`
+### `r.destroy()`
 stop the instance from updating on the `popstate` event
 
-### properties
+## properties
 
-* ### `r.watch`
+### `r.watch`
 should be set to the name of a property on `window.location`, generally "pathname" or "hash"
 
-* ### `r.routes`
+### `r.routes`
 a hash like `{ 'regex': view }`. where views can either be web components or backbone-style (newable javascript class where the instance has an `el` property). 
 > views can optionally define `show()` and `hide()` methods, see [delegated events](#delegated events) for more details.
 
-* ### `r.outlet`
+### `r.outlet`
 a DOM element. if an outlet is specified, whenever a new view in `routes` is matched, the old view will be removed and the new one appended to the outlet.
 
-* ### `r.stack`
+### `r.stack`
 boolean. defaults to false. if true, it will be assumed (even if you have specified an `outlet`), that previously matched views should not be removed from the DOM unless moving backwards in history.
 
-* ### `r.root`
+### `r.root`
 prefix to ignore for `r.watch`. useful for building modular views with nested routers.
 
-* ### `r.route`
+### `r.route`
 readonly string; useful for determining what `root` to use for nested routers.
 
-* ### `r.notFoundView`
+### `r.notFoundView`
 a view to use as a fallback when no matching routes are found.
 
-### delegated events
+## delegated events
 any time `window.location` changes, all active views should expect to receive one or more of the following (optional) hooks:
 
-* ### `view.show(r)`
+### `view.show(r)`
 called on all active views when `window.location` changes - a handle to the router making the call is passed as the first argument.
 
-* ### `view.hide(cb)`
+### `view.hide(cb)`
 called after a view becomes inactive, but just before it is removed from the DOM. if the hide implementation accepts a callback, the router will defer removal from the DOM until the callback is executed.
 
-* ### `view.destroy()`
+### `view.destroy()`
 called when a view is no longer being referenced by a router. usually this will fire right after `hide()`, but may happen before removal from the DOM if `hide(cb)` accepted a callback.
 
 ## notes
