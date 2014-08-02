@@ -1,0 +1,15 @@
+{
+  "name": "router",
+  "version": "1.0.0",
+  "dependencies": {
+    "xtend": "^3.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^5.9.1",
+    "hyperglue2": "jessetane/hyperglue2#boundary",
+    "inherits": "^2.0.1"
+  },
+  "scripts": {
+    "example": "node example"
+  }
+}
