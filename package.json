@@ -1,5 +1,5 @@
 {
-  "name": "router",
+  "name": "uri-router",
   "version": "1.0.0",
   "dependencies": {
     "xtend": "^3.0.0"
