@@ -104,10 +104,15 @@ Signup.prototype.hide = function() {
   this.el.parentNode.removeChild(this.el);
 };
 ```
-the example above is super basic, do `node example` to see fancier stuff `uri-router` can do.
+the example above is super basic, see the example for fancier stuff `uri-router` can do.
 
-## install
-`git clone https://github.com/jessetane/uri-router`  
+## install / example
+``` bash
+git clone https://github.com/jessetane/uri-router
+cd uri-router
+npm install
+npm run example
+```
 
 ## require
 
