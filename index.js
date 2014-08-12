@@ -226,8 +226,8 @@ function onpopstate(evt) {
   updateAll(location, back);
 }
 
-function onclick(evt) {
-  var location = evt.target;
+function onclick(evt, target) {
+  var location = target;
   evt.preventDefault();
   if (evt.target.nodeName === 'FORM') {
     if (!evt.target.action) return;
