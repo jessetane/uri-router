@@ -3,6 +3,7 @@ var render = require('hyperglue2');
 var inherits = require('inherits');
 var template = require('../templates/transitions.html');
 var templateview = require('../templates/transitions-view.html');
+var db = require('../fixtures/transitions');
 
 module.exports = TransitionsView;
 
@@ -12,9 +13,7 @@ function TransitionsView() {
     watch: 'pathname',
     outlet: this.el.querySelector('.outlet'),
     routes: {
-      '/transitions/red': Red,
-      '/transitions/green': Green,
-      '/transitions/blue': Blue,
+      '/transitions/.*': Transition,
     }
   });
 
@@ -33,11 +32,18 @@ function deselect(evt) {
   }
 }
 
-function Transition() {}
+function Transition() {
+  var id = window.location.pathname.replace(/.*\//, '');
+  var model = db[id];
+  this.el = render(templateview, {
+    _attr: { style: 'background:' + model.color + ';' },
+    h3: model.title,
+  });
+}
 
 Transition.prototype.show = function() {
   var self = this;
-  window.getComputedStyle(self.el).opacity; // need to do this in nextTick otherwise the transition won't be applied
+  window.getComputedStyle(self.el).opacity; // need to do this or the transition doesn't get applied
   self.el.style.opacity = '1';
 };
 
@@ -46,27 +52,3 @@ Transition.prototype.hide = function(cb) {  // if hide() accepts a callback the 
   this.el.style.opacity = '0';
   this.el.addEventListener('transitionend', cb);
 };
-
-function Red() {
-  this.el = render(templateview, {
-    _attr: { style: 'background:#FAA;' }, 
-    h3: 'red',
-  });
-}
-inherits(Red, Transition);
-
-function Green() {
-  this.el = render(templateview, {
-    _attr: { style: 'background:#AFA;' }, 
-    h3: 'green',
-  });
-}
-inherits(Green, Transition);
-
-function Blue() {
-  this.el = render(templateview, {
-    _attr: { style: 'background:#AAF;' }, 
-    h3: 'blue',
-  });
-}
-inherits(Blue, Transition);
