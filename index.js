@@ -118,12 +118,15 @@ function update(location, back, stack) {
   // accessible for conveniently accessing a parsed querystring object
   this.location = location;
 
-  var match = firstmatch(route, this.routes); 
+  var match = firstmatch(route, this.routes);
+
+  // nested routers may want to access this on their parent to determine a suitable `root` value
   this.route = match.match;
 
   if (last) {
 
-    if (match.value === last.view.constructor) {
+    if (this.route === this.lastroute &&
+        match.value === last.view.constructor) {
       last.view.show && last.view.show(this);
       return unlock();
     }
@@ -176,6 +179,7 @@ function update(location, back, stack) {
         zIndex: next.zIndex,
         location: location,
       };
+      this.lastroute = this.route;
       this.views.push(next);
     }
     else if (route) {
