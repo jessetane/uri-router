@@ -1,0 +1,37 @@
+<div>
+  <style>
+    .box {
+      width: 100px;
+      height: 100px;
+      border:1px solid #CCC;
+      display: inline-block;
+      margin-left: 1em;
+      vertical-align: middle;
+      position: relative;
+    }
+    .transition-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .center {
+      position: relative;
+      text-align: center;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+  <h1>transitions</h1>
+  <p>transitions</p>
+  <ul style="display:inline-block; vertical-align:middle;">
+    <li><a href="/transitions/red">red</a></li>
+    <li><a href="/transitions/green">green</a></li>
+    <li><a href="/transitions/blue">blue</a></li>
+  </ul>
+  <div class="outlet box"></div>
+</div>

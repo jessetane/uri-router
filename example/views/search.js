@@ -1,17 +1,11 @@
 var router = require('../../');
 var render = require('hyperglue2');
-var robots = require('../fixture/robots');
+var robots = require('../fixtures/robots');
 
 module.exports = Search;
 
 function Search() {
-  this.el = render('<div>\
-                      <h1>search</h1>\
-                      <p>use location.search to filter a list of robots (courtesy wikipedia)</p>\
-                      <input type="search">\
-                      <ul><li></li></ul>\
-                    </div>');
-
+  this.el = render(require('../templates/search.html'));
   this.input = this.el.querySelector('input');
   this.input.addEventListener('keyup', function(evt) {
     router.search({ filter: evt.target.value });

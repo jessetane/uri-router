@@ -8,7 +8,7 @@ inherits(WebComponent, HTMLElement);
 WebComponent.prototype.createdCallback = function() {
   console.log('web-component lifecycle: createdCallback');
   var shadow = this.createShadowRoot();
-  shadow.innerHTML = '<h1>web component</h1><p>your browser supports web components!</p>';
+  shadow.innerHTML = require('../templates/web-component.html');
 };
 
 WebComponent.prototype.attachedCallback = function() {

@@ -1,23 +1,23 @@
 var router = require('../../');
 var render = require('hyperglue2');
+var template = require('../templates/redirecting.html');
+var templateprotected = require('../templates/redirecting-protected.html');
+var templatesignin = require('../templates/redirecting-signin.html');
 
 var user = null;
 
 module.exports = Redirecting;
 
 function Redirecting() {
-  this.el = render('<div>\
-                      <h1>redirecting</h1>\
-                      <p>using programmatic navigation to achieve redirect-like functionality</p>\
-                      <form action="/redirecting/protected">\
-                        <button class="show-protected" type="submit">show protected area</button>\
-                      </form>\
-                      <div class="outlet"></div>\
-                    </div>');
+  this.el = render(template);
 };
 
 Redirecting.prototype.show = function(r) {
-  render(this.el, { '.show-protected': { _attr: { disabled: window.location.pathname === r.route ? null : 'disabled' }}});
+  render(this.el, {
+    '.show-protected': { 
+      _attr: { disabled: window.location.pathname === r.route ? null : 'disabled' }
+    }
+  });
 
   if (this.router) return;
 
@@ -38,14 +38,7 @@ Redirecting.prototype.hide = function() {
 
 function Protected() {
   var self = this;
-  this.el = render('<div>\
-                      <h2>protected area</h2>\
-                      <p></p>\
-                      <form>\
-                        <button type="submit">sign out</button>\
-                      </form>\
-                    </div>');
-
+  this.el = render(templateprotected);
   this.el.addEventListener('submit', function(evt) {
     user = null;
     self.router.pop();
@@ -69,17 +62,10 @@ Protected.prototype.hide = function() {
 
 function Signin() {
   var self = this;
-  this.el = render('<div>\
-                      <h2>sign in</h2>\
-                      <p>please sign in to see the protected area</p>\
-                      <form>\
-                        <input placeholder="name">\
-                        <button type="submit">sign in</button>\
-                      </form>\
-                    </div>');
-
+  this.el = render(templatesignin);
   this.el.addEventListener('submit', function(evt) {
     user = evt.target.elements[0].value;
+    if (!user) return;
     self.router.pop(true);
   });
 }

@@ -4,17 +4,7 @@ var render = require('hyperglue2');
 module.exports = HashView;
 
 function HashView() {
-  this.el = render('<div>\
-                      <h1>hash</h1>\
-                      <p>simple hash routing</p>\
-                      <ul style="display:inline-block; vertical-align:middle;">\
-                        <li><a href="#one">one</a></li>\
-                        <li><a href="#two">two</a></li>\
-                        <li><a href="#three">three</a></li>\
-                      </ul>\
-                      <div class="outlet box"></div>\
-                    </div>');
-
+  this.el = render(require('../templates/hash.html'));
   this.router = router({
     watch: 'hash',
     outlet: this.el.querySelector('.outlet'),

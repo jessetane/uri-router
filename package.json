@@ -8,7 +8,8 @@
     "browserify": "^5.9.1",
     "hyperglue2": "jessetane/hyperglue2#boundary",
     "inherits": "^2.0.1",
-    "tape": "^2.13.4"
+    "tape": "^2.13.4",
+    "txtify2": "^1.0.0"
   },
   "scripts": {
     "example": "node example"

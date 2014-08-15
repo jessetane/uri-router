@@ -1,15 +1,13 @@
 var router = require('../../');
 var render = require('hyperglue2');
 var inherits = require('inherits');
+var template = require('../templates/stacking.html');
+var templateview = require('../templates/stacking-view.html');
 
 module.exports = Stacks;
 
 function Stacks() {
-  this.el = render('<div>\
-                      <h1>stacks</h1>\
-                      <p>you can stack views ala iOS\'s navigation controller</p>\
-                      <div class="levels"></div>\
-                    </div>');
+  this.el = render(template);
 };
 
 Stacks.prototype.show = function(r) {
@@ -46,28 +44,39 @@ Level.prototype.hide = function() {
 };
 
 function One() {
-  this.el = render('<div class="stack-level">\
-                      <h3>level 1</h3>\
-                      <a href="' + pathname().current + '/two">forward</a>\
-                    </div>');
+  this.el = render(templateview, {
+    h3: 'level 1',
+    a: [{
+      _attr: { href: pathname().current + '/two' },
+      _text: 'forward',
+    }]
+  });
 }
 inherits(One, Level);
 
 function Two() {
-  this.el = render('<div class="stack-level">\
-                      <h3>level 2</h3>\
-                      <a href="' + pathname().prev + '">back</a> |\
-                      <a href="' + pathname().current + '/three">forward</a>\
-                    </div>');
+  this.el = render(templateview, {
+    h3: 'level 2',
+    a: [{
+      _attr: { href: pathname().prev },
+      _text: 'back',
+    }, {
+      _attr: { href: pathname().current + '/three' },
+      _text: 'forward',
+    }]
+  });
 }
 Two.zIndex = 2;  // indicate preferred stacking order to support deep linking to somewhere in the middle of the stack
 inherits(Two, Level);
 
 function Three() {
-  this.el = render('<div class="stack-level">\
-                      <h3>level 3</h3>\
-                      <a href="' + pathname().prev + '">back</a>\
-                    </div>');
+  this.el = render(templateview, {
+    h3: 'level 3',
+    a: [{
+      _attr: { href: pathname().prev },
+      _text: 'back',
+    }]
+  });
 }
 Three.zIndex = 3;
 inherits(Three, Level);

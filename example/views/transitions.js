@@ -1,21 +1,13 @@
 var router = require('../../');
 var render = require('hyperglue2');
 var inherits = require('inherits');
+var template = require('../templates/transitions.html');
+var templateview = require('../templates/transitions-view.html');
 
 module.exports = TransitionsView;
 
 function TransitionsView() {
-  this.el = render('<div>\
-                      <h1>transitions</h1>\
-                      <p>transitions</p>\
-                      <ul style="display:inline-block; vertical-align:middle;">\
-                        <li><a href="/transitions/red">red</a></li>\
-                        <li><a href="/transitions/green">green</a></li>\
-                        <li><a href="/transitions/blue">blue</a></li>\
-                      </ul>\
-                      <div class="outlet box"></div>\
-                    </div>');
-
+  this.el = render(template);
   this.router = router({
     watch: 'pathname',
     outlet: this.el.querySelector('.outlet'),
@@ -45,9 +37,8 @@ function Transition() {}
 
 Transition.prototype.show = function() {
   var self = this;
-  setTimeout(function() {
-    self.el.style.opacity = '1';  // need to do this in nextTick otherwise the transition won't be applied
-  }, 100);
+  window.getComputedStyle(self.el).opacity; // need to do this in nextTick otherwise the transition won't be applied
+  self.el.style.opacity = '1';
 };
 
 Transition.prototype.hide = function(cb) {  // if hide() accepts a callback the router will wait before removing the element
@@ -57,16 +48,25 @@ Transition.prototype.hide = function(cb) {  // if hide() accepts a callback the 
 };
 
 function Red() {
-  this.el = render('<div class="transition-bg" style="background:#FAA;"><h3 class="center">red</h3></div>');
+  this.el = render(templateview, {
+    _attr: { style: 'background:#FAA;' }, 
+    h3: 'red',
+  });
 }
 inherits(Red, Transition);
 
 function Green() {
-  this.el = render('<div class="transition-bg" style="background:#AFA;"><h3 class="center">green</h3></div>');
+  this.el = render(templateview, {
+    _attr: { style: 'background:#AFA;' }, 
+    h3: 'green',
+  });
 }
 inherits(Green, Transition);
 
 function Blue() {
-  this.el = render('<div class="transition-bg" style="background:#AAF;"><h3 class="center">blue</h3></div>');
+  this.el = render(templateview, {
+    _attr: { style: 'background:#AAF;' }, 
+    h3: 'blue',
+  });
 }
 inherits(Blue, Transition);

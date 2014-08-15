@@ -21,7 +21,7 @@ var server = http.createServer(function(req, res) {
   res.end(fs.readFileSync(__dirname + '/' + file));
 });
 
-exec(__dirname + '/../node_modules/.bin/browserify ' + __dirname + '/app.js > ' + __dirname + '/build.js', function(err) {
+exec(__dirname + '/../node_modules/.bin/browserify -t txtify2 ' + __dirname + '/app.js > ' + __dirname + '/build.js', function(err) {
   if (err) throw err;
   
   server.listen(port, '::', function() {
