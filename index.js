@@ -107,13 +107,16 @@ function update(location, back, stack) {
   else lock = true;
 
   var route = location[this.watch];
-  var last = this.views.slice(-1)[0];
+  var last = this.last = this.views.slice(-1)[0];
   var next = null;
 
   // respect root
   if (this.root) {
     route = route.replace(new RegExp('^' + this.root), '');
   }
+
+  // expose direction for views
+  this.back = back;
 
   // window.location should match by now, but we make this property
   // accessible for conveniently accessing a parsed querystring object
@@ -138,7 +141,7 @@ function update(location, back, stack) {
 
     // respect ordering
     if (this.stack && match.value) {
-      back = (last.zIndex || 0) > (match.value.zIndex || 0);
+      back = this.back = (last.zIndex || 0) > (match.value.zIndex || 0);
     }
 
     var hide = last.view.hide && last.view.hide.bind(last.view);
