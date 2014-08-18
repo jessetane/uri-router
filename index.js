@@ -90,7 +90,6 @@ Router.prototype.destroy = function() {
 function push(location, replace, back, stack) {
   location = mklocation(location);
   if (location.href === lasthref) return;
-  lasthref = location.href;
 
   if (replace) {
     window.history.replaceState(historyPosition, null, location.href);
@@ -100,6 +99,7 @@ function push(location, replace, back, stack) {
   }
 
   updateAll(location, back, stack);
+  lasthref = location.href;
 }
 
 function update(location, back, stack) {
@@ -218,7 +218,6 @@ function updateAll(location, back, stack) {
 function onpopstate(evt) {
   var back = true;
   var location = mklocation();
-  lasthref = location.href;
 
   if (historyPosition < evt.state) {
     back = false;
@@ -229,6 +228,7 @@ function onpopstate(evt) {
   }
 
   updateAll(location, back);
+  lasthref = location.href;
 }
 
 function onclick(evt, target) {
