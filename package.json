@@ -6,22 +6,13 @@
   },
   "devDependencies": {
     "browserify": "^5.9.1",
-    "hyperglue2": "jessetane/hyperglue2#boundary",
+    "ecstatic": "^0.5.4",
+    "hyperglue2": "jessetane/hyperglue2",
     "inherits": "^2.0.1",
     "tape": "^2.13.4",
     "txtify2": "^1.0.0"
   },
   "scripts": {
     "example": "node example"
-  },
-  "testling": {
-    "files": "test/index.js",
-    "browsers": [
-      "ie/8..latest",
-      "ff/24..latest",
-      "chrome/25..latest",
-      "safari/5.1..latest",
-      "opera/12..latest"
-    ]
   }
 }
