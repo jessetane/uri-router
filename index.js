@@ -84,6 +84,11 @@ Router.prototype.pop = function(replace) {
 
 Router.prototype.destroy = function() {
   var self = this;
+  this.destroyed = true;
+  while (this.views.length) {
+    var v = this.views.pop();
+    v.view.hide && v.view.hide();
+  }
   routers = routers.filter(function(r) { return r !== self });
 };
 
@@ -210,9 +215,10 @@ function update(location, back, stack) {
 }
 
 function updateAll(location, back, stack) {
-  for (var i in routers) {
-    var router = routers[i];
-    if (router) {
+  var r = routers.slice();
+  for (var i in r) {
+    var router = r[i];
+    if (router && !router.destroyed) {
       update.call(router, location, back, stack);
     }
   }
