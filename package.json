@@ -1,6 +1,10 @@
 {
   "name": "uri-router",
   "version": "1.0.0",
+  "keywords": [
+    "pushstate",
+    "router"
+  ],
   "dependencies": {
     "xtend": "^3.0.0"
   },
@@ -14,5 +18,11 @@
   },
   "scripts": {
     "example": "node example"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/jessetane/uri-router.git"
+  },
+  "author": "Jesse Tane <jesse.tane@gmail.com>",
+  "license": "WTFPL"
 }
