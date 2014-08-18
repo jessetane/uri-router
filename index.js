@@ -48,6 +48,7 @@ function Router(props) {
     return new Router(props);
 
   this.root = '';
+  this.reuse = true;
   this.views = [];
   xtend(this, props);
 
@@ -125,7 +126,7 @@ function update(location, back, stack) {
 
   if (last) {
 
-    if (this.route === this.lastroute &&
+    if ((this.reuse || this.route === this.lastroute) &&
         match.value === last.view.constructor) {
       last.view.show && last.view.show(this);
       return unlock();
