@@ -242,11 +242,12 @@ function onpopstate(evt) {
 
 function onclick(evt, target) {
   var location = target;
-  evt.preventDefault();
   if (evt.target.nodeName === 'FORM') {
     if (!evt.target.action) return;
     location = evt.target.action;
   }
+  if (location.host !== window.location.host) return;
+  evt.preventDefault();
   push(mklocation(location));
 }
 
