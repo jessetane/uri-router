@@ -12,7 +12,6 @@ function TransitionsView() {
   this.router = router({
     watch: 'pathname',
     outlet: this.el.querySelector('.outlet'),
-    reuse: false,
     routes: {
       '/transitions/.*': Transition,
     }

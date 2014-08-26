@@ -242,12 +242,16 @@ function onpopstate(evt) {
 function onclick(evt, target) {
   var location = target;
   if (evt.target.nodeName === 'FORM') {
-    if (!evt.target.action) return;
+    if (!evt.target.action) {
+      evt.preventDefault();
+      return;
+    }
     location = evt.target.action;
   }
+  location = mklocation(location);
   if (location.host !== window.location.host) return;
   evt.preventDefault();
-  push(mklocation(location));
+  push(location);
 }
 
 function mklocation(location) {
