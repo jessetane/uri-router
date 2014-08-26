@@ -48,7 +48,6 @@ function Router(props) {
     return new Router(props);
 
   this.root = '';
-  this.reuse = true;
   this.views = [];
   xtend(this, props);
 
@@ -134,8 +133,7 @@ function update(location, back, stack) {
 
   if (last) {
 
-    if ((this.reuse || this.route === this.lastroute) &&
-        match.value === last.view.constructor) {
+    if (this.route === this.lastroute) {
       last.view.show && last.view.show(this);
       return unlock();
     }
@@ -174,7 +172,8 @@ function update(location, back, stack) {
 
   if (back) {
     next = this.views.slice(-1)[0];
-    if (next && next.view.constructor !== match.value) {
+    if (next) {
+      this.lastroute = this.route;
       update.apply(this, arguments);
       return unlock();
     }
