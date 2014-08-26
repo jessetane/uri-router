@@ -2,7 +2,7 @@ var qs = require('querystring');
 var url = require('url');
 var xtend = require('xtend/mutable');
 var clickjack = require('./lib/clickjack');
-var bestmatch = require('./lib/bestmatch');
+var firstmatch = require('./lib/firstmatch');
 
 var lasthref = null;
 var historyPosition = window.history.length; // for telling the difference between back / forward buttons
@@ -126,7 +126,7 @@ function update(location, back, stack) {
   // accessible for conveniently accessing a parsed querystring object
   this.location = location;
 
-  var match = bestmatch(route, this.routes);
+  var match = firstmatch(route, this.routes);
 
   // nested routers may want to access this on their parent to determine a suitable `root` value
   this.route = match.match;
