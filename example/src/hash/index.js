@@ -1,10 +1,10 @@
-var router = require('../../');
+var router = require('../../../');
 var render = require('hyperglue2');
 
 module.exports = HashView;
 
 function HashView() {
-  this.el = render(require('../templates/hash.html'));
+  this.el = render(require('./index.html'));
   this.router = router({
     watch: 'hash',
     outlet: this.el.querySelector('.outlet'),

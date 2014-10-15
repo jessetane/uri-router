@@ -1,9 +1,9 @@
-var router = require('../../');
+var router = require('../../../');
 var render = require('hyperglue2');
 var inherits = require('inherits');
-var template = require('../templates/transitions.html');
-var templateview = require('../templates/transitions-view.html');
-var db = require('../fixtures/transitions');
+var template = require('./index.html');
+var templateview = require('./transition.html');
+var model = require('./model');
 
 module.exports = TransitionsView;
 
@@ -34,10 +34,10 @@ function deselect(evt) {
 
 function Transition() {
   var id = window.location.pathname.replace(/.*\//, '');
-  var model = db[id];
+  var m = model[id];
   this.el = render(templateview, {
-    _attr: { style: 'background:' + model.color + ';' },
-    h3: model.title,
+    _attr: { style: 'background:' + m.color + ';' },
+    h3: m.title,
   });
 }
 

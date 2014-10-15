@@ -1,0 +1,17 @@
+{
+  "one": {
+    "two": {
+      "three": {
+        "file.txt": "text content of file"
+      }
+    }
+  },
+  "two": {
+    "three": {
+      "otherfile.txt": "oh hai"
+    }
+  },
+  "three": {
+    "file.txt": "sup"
+  }
+}

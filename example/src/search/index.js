@@ -1,11 +1,11 @@
-var router = require('../../');
+var router = require('../../../');
 var render = require('hyperglue2');
-var robots = require('../fixtures/robots');
+var robots = require('./model');
 
 module.exports = Search;
 
 function Search() {
-  this.el = render(require('../templates/search.html'));
+  this.el = render(require('./index.html'));
   this.input = this.el.querySelector('input');
   this.input.addEventListener('keyup', function(evt) {
     router.search({ filter: evt.target.value });

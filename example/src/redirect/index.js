@@ -1,8 +1,8 @@
-var router = require('../../');
+var router = require('../../../');
 var render = require('hyperglue2');
-var template = require('../templates/redirecting.html');
-var templateprotected = require('../templates/redirecting-protected.html');
-var templatesignin = require('../templates/redirecting-signin.html');
+var template = require('./index.html');
+var templateprotected = require('./protected.html');
+var templatesignin = require('./signin.html');
 
 var user = null;
 

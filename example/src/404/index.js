@@ -3,7 +3,7 @@ var render = require('hyperglue2');
 module.exports = NotFound;
 
 function NotFound() {
-  this.el = render(require('../templates/404.html'));
+  this.el = render(require('./index.html'));
 };
 
 NotFound.prototype.show = function() {
