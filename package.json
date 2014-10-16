@@ -10,7 +10,7 @@
     "nestable"
   ],
   "dependencies": {
-    "xtend": "^3.0.0"
+    "xtend": "^4.0.0"
   },
   "devDependencies": {
     "browserify": "^6.0.3",
