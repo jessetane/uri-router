@@ -4,6 +4,7 @@ var xtend = require('xtend/mutable');
 var clickjack = require('./lib/clickjack');
 var firstmatch = require('./lib/firstmatch');
 
+var init = true;
 var lasthref = null;
 var historyPosition = window.history.length; // for telling the difference between back / forward buttons
 var routers = [];
@@ -53,6 +54,12 @@ function Router(props) {
 
   routers.push(this);
   update.call(this, mklocation());
+
+  if (init && routers.length === 1) {
+    setTimeout(function() {
+      init = false;
+    });
+  }
 }
 
 Object.defineProperty(Router.prototype, 'outlet', {
@@ -119,6 +126,9 @@ function updateAll(location, back, stack) {
 function update(location, back, stack) {
   if (lock) return queue.push(update.bind(this, location, back, stack));
   else lock = true;
+
+  // for distiguishing between the very first popstate and and any others, useful for custom init behaviors
+  this.init = init;
 
   // window.location should match by now, but we make this property
   // accessible for conveniently accessing a parsed querystring object
