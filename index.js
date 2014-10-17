@@ -295,14 +295,15 @@ function onclick(evt, target) {
 }
 
 function mklocation(location) {
-  if (!location) location = window.location;
+  if (!location && typeof location !== 'string') location = window.location;
   if (typeof location === 'object') location = (location.protocol || window.location.protocol) + '//' + 
                                                (location.host || window.location.host) + 
                                                (location.pathname || '') + 
                                                (location.search || '') + 
                                                (location.hash || '');
   location = url.parse(location, true);
-  location.hash = location.hash || '';      // annoying, shouldn't these come back empty strings instead of null?
+  location.pathname = location.pathname || '';  // annoying, shouldn't these come back empty strings instead of null?
+  location.hash = location.hash || '';      
   location.search = location.search || '';
   location.query = location.query || {};
   return location;
