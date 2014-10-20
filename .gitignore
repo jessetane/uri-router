@@ -1,4 +1,4 @@
 node_modules
 npm-debug.log
-example/build.js
+example/share/build.js
 test/build.js
