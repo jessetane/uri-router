@@ -99,8 +99,11 @@ Router.prototype.destroy = function() {
 };
 
 function push(location, replace, back, stack) {
+  if (lock) return queue.push(push.bind(null, location, replace, back, stack));
+  else lock = true;
+
   location = mklocation(location);
-  if (location.href === lasthref) return;
+  if (location.href === lasthref) return unlock();
 
   if (replace) {
     window.history.replaceState(historyPosition, null, location.href);
@@ -111,6 +114,7 @@ function push(location, replace, back, stack) {
 
   updateAll(location, back, stack);
   lasthref = location.href;
+  unlock();
 }
 
 function updateAll(location, back, stack) {
@@ -175,7 +179,7 @@ function update(location, back, stack) {
     var parts = (debasedroute ? this.stack + debasedroute : '').split(this.stack);
     var stackedroutes = parts.slice(0, -1);
 
-    // first remove and excess views from the stack
+    // first remove any excess views from the stack
     while (this.views.length > stackedroutes.length) {
       hideview.call(this, this.views.slice(-1)[0], true);
     }
@@ -235,7 +239,6 @@ function update(location, back, stack) {
       }
     }
 
-    // show
     next.view.show && next.view.show(this);
   }
   
