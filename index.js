@@ -131,6 +131,9 @@ function update(location, back, stack) {
   if (lock) return queue.push(update.bind(this, location, back, stack));
   else lock = true;
 
+  // if destroyed, do not continue
+  if (this.destroyed) return unlock();
+
   // for distiguishing between the very first popstate and and any others, useful for custom init behaviors
   this.init = init;
 
