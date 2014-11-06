@@ -1,10 +1,8 @@
 # uri-router
-a small framework for building URI driven DOM applications.
+A small framework for building URI driven DOM applications.
 
-[![browser support](http://ci.testling.com/jessetane/uri-router.png)](http://ci.testling.com/jessetane/uri-router)
-
-## why
-loose ideas for a better pushState router:
+## Why
+Loose ideas for a better pushState router:
 
 * push the history for _all_ URI changes unless explicitly told otherwise
 * capture and prevent default link-click and form-submit behaviors
@@ -16,7 +14,7 @@ loose ideas for a better pushState router:
 
 1.0.0 is a first pass at exploring these ideas. as of this writing it's only been used to make the example app, so there are probably tons of bugs and inefficiencies :)
 
-## how
+## How
 index.html
 ``` html
 <!doctype html>
@@ -104,9 +102,9 @@ Signup.prototype.hide = function() {
   this.el.parentNode.removeChild(this.el);
 };
 ```
-the example above is super basic, see the example for fancier stuff `uri-router` can do.
+The example above is super basic, see the example for fancier stuff `uri-router` can do.
 
-## install / example
+## Example
 ``` bash
 git clone https://github.com/jessetane/uri-router
 cd uri-router
@@ -114,83 +112,88 @@ npm install
 npm run example
 ```
 
-## require
+## Require
 
-### `var Router = require('uri-router')`
+#### `var Router = require('uri-router')`
 returns a constructor function for creating routers. the first time `uri-router` is required, it will globally hijack all link clicks and form submissions targeting the origin domain and start listening for the `window.history.onpopstate` event.
 
-## static methods
+## Static methods
 
-### `Router.push(location, [replace])`  
-update `window.location`.
+#### `Router.push(location, [replace])`  
+Update `window.location`.
   * `location` href string
   * `replace` boolean; indicates to use replaceState instead of pushState
 
-### `Router.pop()`
-alias of `window.history.back()`.
+#### `Router.pop()`
+Alias of `window.history.back()`.
 
-### `Router.search(params, [replace])`  
-update `window.location.search` without clobbering existing parameters.
+#### `Router.search(params, [replace])`  
+Update `window.location.search` without clobbering existing parameters.
 > example: assuming the search string is set to `?a=1`, calling `Router.search({ b: 2 })` would change it to `?a=1&b=2`.
 
-## instance methods
+## Instance methods
 
-### `var r = new Router([opts])`
-the constructor function. `opts` is a hash that gets merged with the router instance `r`. see [properties](#properties) for more details.
+#### `var r = new Router([opts])`
+The constructor function. `opts` is a hash that gets merged with the router instance `r`. see [properties](#properties) for more details.
 
-### `r.push(locationComponent, [replace, [stack]])`
-a wrapper around `Router.push` that will only update `window.location[r.watch]`.
+#### `r.push(locationComponent, [replace, [stack]])`
+A wrapper around `Router.push` that will only update `window.location[r.watch]`.
   
   * `locationComponent` href component string (e.g. '#some-hash')
   * `replace` boolean; use replaceState
   * `stack` boolean; do not remove current view even if the instance has an outlet
 
-> example: assuming `window.location.href` is "/some/path?a=b#one", and `r.watch` is "hash", `r.push('#two')` would update the href to "/some/path?a=b#two"
+> Example: assuming `window.location.href` is "/some/path?a=b#one", and `r.watch` is "hash", `r.push('#two')` would update the href to "/some/path?a=b#two"
 
-### `r.pop([replace])`
-like pressing the back button, but only for the component of the url the instance is watching.
+#### `r.pop([replace])`
+Like pressing the back button, but only for the component of the url the instance is watching.
 
-### `r.destroy()`
-stop the instance from updating on the `popstate` event
+#### `r.destroy()`
+Stop the instance from updating on the `popstate` event
 
-## properties
+## Instance properties
 
-### `r.watch`
-should be set to the name of a property on `window.location`, generally "pathname" or "hash"
+#### `r.watch`
+Should be set to the name of a property on `window.location`, generally "pathname" or "hash"
 
-### `r.routes`
-a hash like `{ 'regex': view }`. where views can either be web components or backbone-style (newable javascript class where the instance has an `el` property). 
-> views can optionally define `show()` and `hide()` methods, see [delegated events](#delegated-events) for more details.
+#### `r.routes`
+A hash like `{ 'regex': view }`. Where views can either be web components or backbone-style (newable javascript class where the instance has an `el` property). 
+> Views can optionally define `show()` and `hide()` methods, see [delegated events](#delegated-events) for more details.
 
-### `r.outlet`
-a DOM element. if an outlet is specified, whenever a new view in `routes` is matched, the old view will be removed and the new one appended to the outlet.
+#### `r.outlet`
+A DOM element. if an outlet is specified, whenever a new view in `routes` is matched, the old view will be removed and the new one appended to the outlet.
 
-### `r.stack`
-boolean. defaults to false. if true, it will be assumed (even if you have specified an `outlet`), that previously matched views should not be removed from the DOM unless moving backwards in history.
+#### `r.stack`
+Boolean. Defaults to false. If true, it will be assumed (even if you have specified an `outlet`), that previously matched views should not be removed from the DOM unless moving backwards in history.
 
-### `r.root`
-prefix to ignore for `r.watch`. useful for building modular views with nested routers.
+#### `r.root`
+Prefix to ignore for `r.watch`. Useful for building modular views with nested routers.
 
-### `r.route`
-readonly string; useful for determining what `root` to use for nested routers.
+#### `r.route`
+Readonly string; useful for determining what `root` to use for nested routers.
 
-### `r.notFoundView`
-a view to use as a fallback when no matching routes are found.
+#### `r.notFoundView`
+A view to use as a fallback when no matching routes are found.
 
-## delegated events
-any time `window.location` changes, all active views should expect to receive one or more of the following (optional) hooks:
+## Delegated events
+Any time `window.location` changes, all active views should expect to receive one or more of the following (optional) hooks:
 
-### `view.show(r)`
-called on all active views when `window.location` changes - a handle to the router making the call is passed as the first argument.
+#### `view.show(r)`
+Called on all active views when `window.location` changes - a handle to the router making the call is passed as the first argument.
 
-### `view.hide(cb)`
-called after a view becomes inactive, but just before it is removed from the DOM. if the hide implementation accepts a callback, the router will defer removal from the DOM until the callback is executed.
+#### `view.hide(cb)`
+Called after a view becomes inactive, but just before it is removed from the DOM. If the hide implementation accepts a callback, the router will defer removal from the DOM until the callback is executed.
 
-### `view.destroy()`
-called when a view is no longer being referenced by a router. usually this will fire right after `hide()`, but may happen before removal from the DOM if `hide(cb)` accepted a callback.
+#### `view.destroy()`
+Called when a view is no longer being referenced by a router. Usually this will fire right after `hide()`, but may happen before removal from the DOM if `hide(cb)` accepted a callback.
 
-## notes
-do not use `window.history.pushState()` directly! there is no `onpushstate` event so if you do, `Router` instances won't be able see your location changes.
+## Notes
+Do not use `window.history.pushState()` directly! There is no `onpushstate` event so if you do, `Router` instances won't be able see your location changes.
 
-## license
-WTFPL
+## License
+Copyright © 2014 Jesse Tane <jesse.tane@gmail.com>
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the [WTFPL](http://www.wtfpl.net/txt/copying).
+
+No Warranty. The Software is provided "as is" without warranty of any kind, either express or implied, including without limitation any implied warranties of condition, uninterrupted use, merchantability, fitness for a particular purpose, or non-infringement.
