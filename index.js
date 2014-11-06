@@ -93,7 +93,7 @@ Router.prototype.destroy = function() {
   this.destroyed = true;
   while (this.views.length) {
     var v = this.views.pop();
-    v.view.hide && v.view.hide();
+    hideview.call(this, v);
   }
   routers = routers.filter(function(r) { return r !== self });
 };
