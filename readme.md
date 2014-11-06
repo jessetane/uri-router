@@ -1,8 +1,10 @@
 # uri-router
 A small framework for building URI driven DOM applications.
 
+* This project is under active development and as such there are no releases tagged. Use at your own risk.
+
 ## Why
-Loose ideas for a better pushState router:
+Exploring ideas for a better pushState router:
 
 * push the history for _all_ URI changes unless explicitly told otherwise
 * capture and prevent default link-click and form-submit behaviors
@@ -11,8 +13,6 @@ Loose ideas for a better pushState router:
 * optionally handle adding and removing views from the DOM automatically
 * have a simple, optional callback mechanism to support transitions
 * allow web-components or backbone-style classes to be used as views
-
-1.0.0 is a first pass at exploring these ideas. as of this writing it's only been used to make the example app, so there are probably tons of bugs and inefficiencies :)
 
 ## How
 index.html
@@ -189,6 +189,9 @@ Called when a view is no longer being referenced by a router. Usually this will 
 
 ## Notes
 Do not use `window.history.pushState()` directly! There is no `onpushstate` event so if you do, `Router` instances won't be able see your location changes.
+
+## Releases
+None yet - still in a prototype / experimental state.
 
 ## License
 Copyright © 2014 Jesse Tane <jesse.tane@gmail.com>
