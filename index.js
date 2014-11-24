@@ -204,9 +204,20 @@ function update(location, back, stack) {
     }
   }
 
-  // hide the last view if there is one
+  // get last view if there is one
   var last = this.views.slice(-1)[0];
+
+  // get next view
+  next = match.value || this.notFound;
+
+
   if (last) {
+
+    // reuse?
+    if (last.view.constructor.reuse && next === last.view.constructor) {
+      last.view.show && last.view.show(this);
+      return unlock();
+    }
 
     // respect zIndex
     if (this.stack && match.value) {
@@ -217,7 +228,6 @@ function update(location, back, stack) {
   }
 
   // match route with a view constructor
-  next = match.value || this.notFound;
   if (next) {
 
     // create and store the view meta object
