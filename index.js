@@ -180,8 +180,8 @@ function update(location, back, stack) {
     return unlock();
   }
 
-  // if this.stack is a string, use it to split the route up into chunks
-  if (this.stack && this.stack !== true) {
+  // use this.stack to split the route up into chunks
+  if (this.stack) {
     var base = route.slice(0, 1);
     var debasedroute = route.slice(1);
     var parts = (debasedroute ? this.stack + debasedroute : '').split(this.stack);
@@ -225,7 +225,7 @@ function update(location, back, stack) {
     }
 
     // respect zIndex
-    if (this.stack && match.value) {
+    if (match.value) {
       back = this.back = (last.zIndex || 0) > (match.value.zIndex || 0);
     }
 
