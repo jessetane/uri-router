@@ -53,13 +53,12 @@ function Router(props) {
   xtend(this, props);
 
   routers.push(this);
-  update.call(this, mklocation());
 
-  if (init && routers.length === 1) {
-    setTimeout(function() {
-      init = false;
-    });
-  }
+  var self = this
+  setTimeout(function () {
+    update.call(self, mklocation())
+    init = false
+  })
 }
 
 Object.defineProperty(Router.prototype, 'outlet', {
@@ -254,7 +253,8 @@ function update(location, back, stack) {
 
     next.view.show && next.view.show(this);
   }
-  
+
+  this.back = this.init = false;
   unlock();
 }
 
