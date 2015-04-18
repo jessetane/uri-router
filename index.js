@@ -215,7 +215,6 @@ function update(location, back, stack) {
   // get next view
   next = match.value || this.notFound;
 
-
   if (last) {
 
     // reuse?
