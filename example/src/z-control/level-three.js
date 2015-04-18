@@ -1,8 +1,12 @@
+module.exports = Three;
+
 var Level = require('./level');
 var render = require('hyperglue2');
 var inherits = require('inherits');
 
-module.exports = Three;
+inherits(Three, Level);
+
+Three.zIndex = 3;
 
 function Three() {
   this.el = render(require('./level.html'), {
@@ -13,5 +17,3 @@ function Three() {
     }]
   });
 }
-Three.zIndex = 3;
-inherits(Three, Level);

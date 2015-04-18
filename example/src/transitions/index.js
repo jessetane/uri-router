@@ -47,7 +47,7 @@ Transition.prototype.show = function() {
   self.el.style.opacity = '1';
 };
 
-Transition.prototype.hide = function(cb) {  // if hide() accepts a callback the router will wait before removing the element
+Transition.prototype.hide = function(r, cb) {  // if hide() accepts a callback the router will wait before removing the element
   var self = this;
   this.el.style.opacity = '0';
   this.el.addEventListener('transitionend', cb);

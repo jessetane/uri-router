@@ -1,8 +1,8 @@
+module.exports = Stacks;
+
 var router = require('../../../');
 var render = require('hyperglue2');
 var model = require('./model');
-
-module.exports = Stacks;
 
 function Stacks() {
   this.el = render(require('./index.html'));

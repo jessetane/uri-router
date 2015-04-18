@@ -1,8 +1,12 @@
+module.exports = Two;
+
 var Level = require('./level');
 var render = require('hyperglue2');
 var inherits = require('inherits');
 
-module.exports = Two;
+inherits(Two, Level);
+
+Two.zIndex = 2;  // indicate preferred stacking order to support deep linking to somewhere in the middle of the stack
 
 function Two() {
   this.el = render(require('./level.html'), {
@@ -16,5 +20,3 @@ function Two() {
     }]
   });
 }
-Two.zIndex = 2;  // indicate preferred stacking order to support deep linking to somewhere in the middle of the stack
-inherits(Two, Level);

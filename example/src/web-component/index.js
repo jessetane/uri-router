@@ -1,6 +1,6 @@
 var inherits = require('inherits');
 
-module.exports = 'WEB-COMPONENT'; // export tag name for instantiating via document.createElement(tagName)
+module.exports = 'web-component'; // export tag name for instantiating via document.createElement(tagName)
 
 function WebComponent() {}
 inherits(WebComponent, HTMLElement);

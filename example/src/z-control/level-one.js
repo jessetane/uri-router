@@ -1,8 +1,10 @@
+module.exports = One;
+
 var Level = require('./level');
 var render = require('hyperglue2');
 var inherits = require('inherits');
 
-module.exports = One;
+inherits(One, Level);
 
 function One() {
   this.el = render(require('./level.html'), {
@@ -13,4 +15,3 @@ function One() {
     }]
   });
 }
-inherits(One, Level);
