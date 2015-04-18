@@ -10,6 +10,7 @@ var historyPosition = window.history.length; // for telling the difference betwe
 var routers = [];
 var queue = [];
 var lock = false;
+var needsReplace = false
 
 // hijack link clicks and form submissions
 clickjack(window, 'a', 'click', onclick);
@@ -104,11 +105,16 @@ function push(location, replace, back, stack) {
   location = mklocation(location);
   if (location.href === lasthref) return unlock();
 
-  if (replace) {
+  if (needsReplace) {
     window.history.replaceState(historyPosition, null, location.href);
+    needsReplace = false
   }
   else {
     window.history.pushState(++historyPosition, null, location.href);
+  }
+
+  if (replace) {
+    needsReplace = true
   }
 
   updateAll(location, back, stack);
