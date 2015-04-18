@@ -262,11 +262,11 @@ function hideview(meta, back, stacked) {
   var el = meta.view instanceof HTMLElement ? meta.view : meta.view.el;
   if (back || !stacked) {
     if (meta.view.hide) {
-      if (meta.view.hide.length) {
-        meta.view.hide(removeElement.bind(null, el));
+      if (meta.view.hide.length > 1) {
+        meta.view.hide(this, removeElement.bind(null, el));
       }
       else {
-        meta.view.hide();
+        meta.view.hide(this);
         removeElement(el);
       }
     }
@@ -279,11 +279,11 @@ function hideview(meta, back, stacked) {
   }
   else {
     if (meta.view.hide) {
-      if (meta.view.hide.length) {
-        meta.view.hide(function() {});
+      if (meta.view.hide.length > 1) {
+        meta.view.hide(this, function() {});
       }
       else {
-        meta.view.hide();
+        meta.view.hide(this);
       }
     }
   }
