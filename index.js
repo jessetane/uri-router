@@ -224,9 +224,7 @@ function update(location, back, stack) {
     }
 
     // respect zIndex
-    if (match.value) {
-      back = this.back = (last.zIndex || 0) > (match.value.zIndex || 0);
-    }
+    back = this.back = (last.zIndex || 0) > (next && next.zIndex || 0);
 
     hideview.call(this, last, back, this.stack || stack);
   }
