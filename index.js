@@ -297,11 +297,6 @@ function hideview(meta, back, stacked) {
 
 function onpopstate(evt) {
   var location = mklocation();
-
-  if (location.href === lasthref) {
-    return;
-  }
-
   var back = true;
 
   if (historyPosition < evt.state) {
