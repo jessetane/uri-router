@@ -98,11 +98,11 @@ Router.prototype.destroy = function() {
 };
 
 function push(location, replace, back, stack) {
-  if (lock) return queue.push(push.bind(null, location, replace, back, stack));
-  else lock = true;
-
   location = mklocation(location);
-  if (location.href === lasthref) return unlock();
+
+  if (location.href === lasthref) {
+    return;
+  }
 
   if (needsReplace) {
     window.history.replaceState(historyPosition, null, location.href);
@@ -117,11 +117,11 @@ function push(location, replace, back, stack) {
   }
 
   updateAll(location, back, stack);
-  lasthref = location.href;
-  unlock();
 }
 
 function updateAll(location, back, stack) {
+  lock = true;
+
   var r = routers.slice();
   for (var i in r) {
     var router = r[i];
@@ -129,6 +129,9 @@ function updateAll(location, back, stack) {
       update.call(router, location, back, stack);
     }
   }
+
+  lasthref = location.href;
+  unlock();
 }
 
 function update(location, back, stack) {
@@ -292,8 +295,13 @@ function hideview(meta, back, stacked) {
 }
 
 function onpopstate(evt) {
-  var back = true;
   var location = mklocation();
+
+  if (location.href === lasthref) {
+    return;
+  }
+
+  var back = true;
 
   if (historyPosition < evt.state) {
     back = false;
@@ -304,7 +312,6 @@ function onpopstate(evt) {
   }
 
   updateAll(location, back);
-  lasthref = location.href;
 }
 
 function onclick(evt, target) {
