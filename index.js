@@ -54,10 +54,9 @@ function Router(props) {
   xtend(this, props);
 
   routers.push(this);
+  update.call(this, mklocation())
 
-  var self = this
   setTimeout(function () {
-    update.call(self, mklocation())
     init = false
   })
 }
