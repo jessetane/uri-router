@@ -54,10 +54,10 @@ function Router(props) {
   xtend(this, props);
 
   routers.push(this);
-  update.call(this, mklocation())
 
   setTimeout(function () {
-    init = false
+    updateAll(mklocation())
+    init = false;
   })
 }
 
@@ -120,7 +120,12 @@ function push(location, replace, back, stack) {
 }
 
 function updateAll(location, back, stack) {
-  lock = true;
+  if (lock) return queue.push(updateAll.bind(null, location, back, stack));
+  else lock = true;
+
+  if (location.href === lasthref) {
+    return unlock();
+  }
 
   var r = routers.slice();
   for (var i in r) {
@@ -135,11 +140,8 @@ function updateAll(location, back, stack) {
 }
 
 function update(location, back, stack) {
-  if (lock) return queue.push(update.bind(this, location, back, stack));
-  else lock = true;
-
   // if destroyed, do not continue
-  if (this.destroyed) return unlock();
+  if (this.destroyed) return;
 
   // for distiguishing between the very first popstate and and any others, useful for custom init behaviors
   this.init = init;
@@ -179,7 +181,7 @@ function update(location, back, stack) {
       hideview.call(this, this.views[n], true);
     }
     next.view.show && next.view.show(this);
-    return unlock();
+    return;
   }
 
   // use this.stack to split the route up into chunks
@@ -207,7 +209,7 @@ function update(location, back, stack) {
         }
       }
       update.call(this, location, back, stack);
-      return unlock();
+      return;
     }
   }
 
@@ -222,7 +224,7 @@ function update(location, back, stack) {
     // reuse?
     if (last.view.constructor.reuse && next === last.view.constructor) {
       last.view.show && last.view.show(this);
-      return unlock();
+      return;
     }
 
     // respect zIndex
@@ -260,7 +262,6 @@ function update(location, back, stack) {
   }
 
   this.back = this.init = false;
-  unlock();
 }
 
 function hideview(meta, back, stacked) {
