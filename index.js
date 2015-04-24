@@ -135,7 +135,10 @@ function updateAll(location, back, stack) {
     }
   }
 
-  lasthref = location.href;
+  if (routers.length) {
+    lasthref = location.href;
+  }
+
   unlock();
 }
 
