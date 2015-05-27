@@ -132,16 +132,16 @@ function updateAll(location, back, stack) {
     return unlock();
   }
 
+  if (routers.length) {
+    lasthref = location.href;
+  }
+
   var r = routers.slice();
   for (var i in r) {
     var router = r[i];
     if (router && !router.destroyed) {
       update.call(router, location, back, stack);
     }
-  }
-
-  if (routers.length) {
-    lasthref = location.href;
   }
 
   unlock();
