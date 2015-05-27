@@ -28,6 +28,11 @@ Router.push = function(location, replace, stack) {
   push(location, replace, stack);
 };
 
+Router.redirect = function(location) {
+  needsReplace = true;
+  push(location);
+};
+
 Router.pop = function() {
   window.history.back();
 };
