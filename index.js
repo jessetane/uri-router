@@ -128,11 +128,10 @@ function updateAll(location, back, stack) {
   if (lock) return queue.push(updateAll.bind(null, location, back, stack));
   else lock = true;
 
-  var hrefChanged = location.href !== lasthref
+  var hrefChanged = location.href !== lasthref;
+  lasthref = location.href;
 
-  if (routers.length) {
-    lasthref = location.href;
-  }
+  Router.currentLocation = location;
 
   var r = routers.slice();
   for (var i in r) {
