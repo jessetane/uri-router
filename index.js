@@ -10,7 +10,8 @@ var historyPosition = window.history.length; // for telling the difference betwe
 var routers = [];
 var queue = [];
 var lock = false;
-var needsReplace = false
+var needsReplace = false;
+var awaitingUpdate = false;
 
 // hijack link clicks and form submissions
 clickjack(window, 'a', 'click', onclick);
@@ -60,10 +61,14 @@ function Router(props) {
 
   routers.push(this);
 
-  setTimeout(function () {
-    updateAll(mklocation())
-    init = false;
-  })
+  if (!awaitingUpdate) {
+    awaitingUpdate = true;
+    setTimeout(function () {
+      awaitingUpdate = false;
+      updateAll(mklocation())
+      init = false;
+    })
+  }
 }
 
 Object.defineProperty(Router.prototype, 'outlet', {
