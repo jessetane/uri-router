@@ -232,7 +232,7 @@ function update(location, back, stack) {
   if (last) {
 
     // reuse?
-    if (last.view.constructor.reuse && next === last.view.constructor) {
+    if (last.view.reuse || (last.view.constructor.reuse && next === last.view.constructor)) {
       last.view.show && last.view.show(this);
       return;
     }
