@@ -132,8 +132,13 @@ function onchange () {
   var uri = uris.shift()
   if (!uri) return
   if (lastUri && lastUri.href === uri.href) return
-  lastUri = uri
   locked = true
+  if (updateNeeded) {
+    clearTimeout(updateNeeded)
+    updateNeeded = false
+    serviceQueue()
+  }
+  lastUri = uri
   if (uri.popstate) {
     if (!isNaN(uri.popstate)) {
       uri.back = historyLength >= uri.popstate
@@ -190,7 +195,13 @@ function update (router, routes, uri, middleware) {
       return
     }
   }
-  if (!constructor) return
+  if (!constructor) {
+    if (last) {
+      delete router.current
+      hide(last, uri)
+    }
+    return
+  }
   var next = constructor(uri, function () {
     routes = routes.filter(function (route) {
       return route[1] !== constructor
