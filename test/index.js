@@ -184,6 +184,39 @@ tape('view lifecycle', function (t) {
   }
 })
 
+tape('view lifecycle without dom outlet', function (t) {
+  t.plan(2)
+
+  var app = document.querySelector('#app')
+  var r = router({
+    watch: 'pathname',
+    routes: [
+      ['/a', View]
+    ]
+  })
+
+  router.push('/a')
+  t.equal(app.innerHTML, '42')
+  router.push('/')
+  t.equal(app.innerHTML, '')
+  r.destroy()
+
+  function View () {
+    var el = app
+    el.show = show
+    el.hide = hide
+    return el
+  }
+
+  function show (uri) {
+    this.textContent = '42'
+  }
+
+  function hide (uri) {
+    this.textContent = ''
+  }
+})
+
 tape('view lifecycle - async hide()', function (t) {
   t.plan(5)
 
