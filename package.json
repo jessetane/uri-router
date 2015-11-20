@@ -1,32 +1,20 @@
 {
   "name": "uri-router",
-  "version": "0.0.5",
-  "keywords": [
-    "pushstate",
-    "router",
-    "singlepage",
-    "history",
-    "clientside",
-    "nestable"
-  ],
-  "dependencies": {
-    "xtend": "^4.0.0"
+  "version": "1.0.0",
+  "scripts": {
+    "test": "browserify test/index.js > test/build.js && PORT=7357 LOCAL=true node test/server",
+    "example": "node example"
   },
   "devDependencies": {
+    "app-server": "github:jessetane/app-server",
     "browserify": "^6.0.3",
-    "ecstatic": "^0.5.5",
+    "build-js": "github:jessetane/build-js",
     "hyperglue2": "^1.1.0",
     "inherits": "^2.0.1",
     "tape": "^2.13.4",
     "txtify2": "^2.0.0"
   },
-  "scripts": {
-    "example": "node example"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/jessetane/uri-router.git"
-  },
+  "repository": "http://github.com/jessetane/uri-router.git",
   "author": "Jesse Tane <jesse.tane@gmail.com>",
   "license": "WTFPL"
 }

@@ -1,14 +1,25 @@
-var http = require('http');
-var statics = require('ecstatic')(__dirname);
+var JSBuilder = require('build-js')
+var http = require('app-server')
 
-var server = http.createServer(function(req, res) {
-  if (!/\.[^\/]*$/.test(req.url)) {
-    req.url = '/';
-  }
-  console.log(req.url);
-  statics(req, res);
-});
+if (process.env.LOCAL) {
+  var js = new JSBuilder({
+    src: 'test/index.js',
+    dest: 'test/build.js'
+  })
+  js.watch(function (err) {
+    if (err) console.log(err.message)
+    else console.log('test rebuilt')
+  })
+}
 
-server.listen(9000, '::', function() {
-  console.log('server listening on ' + 9000);
-});
+var server = http({
+  share: 'test'
+}, function (err) {
+  if (err) throw err
+  console.log('test server listening on port ' + server.port)
+})
+
+server.middleware = function (req, res, next) {
+  console.log('test server got request: ' + req.method + ' ' + req.url)
+  next()
+}
