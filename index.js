@@ -123,7 +123,7 @@ function destroy () {
     return r !== router
   })
   if (router.current) {
-    hide(router.current, lastUri)
+    hide(router.current, router.outlet, lastUri)
   }
 }
 
@@ -198,7 +198,7 @@ function update (router, routes, uri, middleware) {
   if (!constructor) {
     if (last) {
       delete router.current
-      hide(last, uri)
+      hide(last, router.outlet, uri)
     }
     return
   }
@@ -211,27 +211,29 @@ function update (router, routes, uri, middleware) {
   if (next) {
     next._constructor = constructor
     router.current = next
-    if (last && uri.back) {
-      router.outlet.insertBefore(next, last)
-    } else {
-      router.outlet.appendChild(next)
+    if (router.outlet) {
+      if (last && uri.back) {
+        router.outlet.insertBefore(next, last)
+      } else {
+        router.outlet.appendChild(next)
+      }
     }
-    if (last) hide(last, uri)
+    if (last) hide(last, router.outlet, uri)
     if (next.show) next.show(uri)
   }
 }
 
-function hide (el, uri) {
+function hide (el, outlet, uri) {
   if (el.hide) {
     if (el.hide.length > 1) {
       el.hide(uri, function () {
-        el.parentNode.removeChild(el)
+        outlet && outlet.removeChild(el)
       })
     } else {
       el.hide(uri)
-      el.parentNode.removeChild(el)
+      outlet && outlet.removeChild(el)
     }
   } else {
-    el.parentNode.removeChild(el)
+    outlet && outlet.removeChild(el)
   }
 }
