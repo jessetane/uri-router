@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - '5'
+addons:
+  sauce_connect:
+    username: "uri-router"
+    access_key:
+      secure: "QJjzonZuEdpqsZjAmp96QmOj4n8F6WEbGI3wl+PJVVTGwZXOVIYeZ24d/jGWXPl++kaYqhRLlCVC5KSzVQoDqCi8kGbos6H10qNh0bW6DPbejOeKBONETrCFWgpXr+5xelY5OCUi38bmVGiNyNjlK3bVBEUqTjiL6vNewwOCSrM="
