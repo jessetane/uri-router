@@ -1,7 +1,7 @@
 # uri-router
 A small framework for building URI driven DOM applications.
 
-[![saucelabs][https://saucelabs.com/browser-matrix/uri-router.svg]][https://saucelabs.com/u/uri-router]
+[![saucelabs](https://saucelabs.com/browser-matrix/uri-router.svg)](https://saucelabs.com/u/uri-router)
 
 ## Why
 In my opinion, a useful pushState router should:
