@@ -4,6 +4,7 @@ var request = require('hyperquest')
 
 process.env.SAUCE = 'true'
 
+var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY).toString('base64')
 var platforms = {}
 
 var server = http({
@@ -29,7 +30,6 @@ new JSBuilder({
 
 function runTests () {
   var url = 'https://saucelabs.com/rest/v1/' + process.env.SAUCE_USERNAME + '/js-tests'
-  var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY).toString('base64')
   var data = ''
   var body = {
     url: 'http://localhost:' + server.port,
@@ -68,9 +68,7 @@ function runTests () {
 function checkTestStatus () {
   var self = this
   var url = 'https://saucelabs.com/rest/v1/' + process.env.SAUCE_USERNAME + '/js-tests/status'
-  var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY).toString('base64')
   var data = ''
-
   request(url, {
     method: 'POST',
     headers: {
