@@ -110,7 +110,7 @@ tape('back and forward buttons order is correct', function (t) {
 
   function onpopstate () {
     var op = ops.shift()
-    window.history[op]()
+    op && window.history[op]()
   }
 
   function any () {
