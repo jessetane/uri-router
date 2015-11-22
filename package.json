@@ -1,6 +1,14 @@
 {
   "name": "uri-router",
   "version": "1.0.0",
+  "description": "A small framework for building URI driven DOM applications",
+  "keywords": [
+    "router",
+    "pushState",
+    "history",
+    "uri",
+    "url"
+  ],
   "scripts": {
     "test": "PORT=7357 LOCAL=true node test/server",
     "example": "PORT=8090 node example/server"
