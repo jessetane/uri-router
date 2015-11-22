@@ -1,8 +1,5 @@
-# uri-router
+# uri-router [![npm](http://img.shields.io/npm/v/uri-router.svg?style=flat-square)](http://www.npmjs.org/uri-router) [![tests](https://img.shields.io/travis/jessetane/uri-router.svg?style=flat-square&branch=master)](https://travis-ci.org/jessetane/uri-router)
 A small framework for building URI driven DOM applications.
-
-[![npm](http://img.shields.io/npm/v/uri-router.svg?style=flat-square)](http://www.npmjs.org/uri-router)
-[![tests](https://img.shields.io/travis/jessetane/uri-router.svg?style=flat-square&branch=master)](https://travis-ci.org/jessetane/uri-router)
 
 [![saucelabs](https://saucelabs.com/browser-matrix/uri-router.svg)](https://saucelabs.com/u/uri-router)
 
@@ -14,7 +11,7 @@ Views that require knowlege of the outside DOM aren't very flexible. uri-router 
 * Captures and prevents default link-click and form-submit behaviors.
 * Pushes the history for _any_ location change, hashes are not special.
 * Provides an optional callback mechanism to support transitions.
-* Queues recursive updates properly (default window.history.back() runs in next tick, but disregards succeeding pushState calls).
+* Queues recursive updates properly (window.history.back runs in next tick, but disregards succeeding pushState calls).
 * Nestable!
 
 ## Example
