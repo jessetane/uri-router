@@ -201,7 +201,7 @@ A parsed querystring object.
 * [1.x](https://github.com/jessetane/uri-router/releases)
   * Complete rewrite, November 2015 after a year+ of use in production.
 * [0.x](https://github.com/jessetane/uri-router/releases)
-  * Initial prototype, August 2015.
+  * Initial prototype, August 2014.
 
 ## License
 Copyright © 2014 Jesse Tane <jesse.tane@gmail.com>
