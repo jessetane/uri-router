@@ -4,6 +4,8 @@ var request = require('hyperquest')
 
 process.env.SAUCE = 'true'
 
+var platforms = {}
+
 var server = http({
   share: 'test'
 }, function (err) {
@@ -12,7 +14,7 @@ var server = http({
 })
 
 server.middleware = function (req, res, next) {
-  console.log('test server got request: ' + req.method + ' ' + req.url)
+  // console.log('test server got request: ' + req.method + ' ' + req.url)
   next()
 }
 
@@ -27,8 +29,27 @@ new JSBuilder({
 
 function runTests () {
   var url = 'https://saucelabs.com/rest/v1/' + process.env.SAUCE_USERNAME + '/js-tests'
-  var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_KEY).toString('base64')
+  var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY).toString('base64')
   var data = ''
+  var body = {
+    url: 'http://localhost:' + server.port,
+    build: process.env.TRAVIS_BUILD_NUMBER || String(Math.random()).slice(2),
+    framework: 'custom',
+    platforms: [
+      ['linux',       'googlechrome',            ''],
+      ['linux',       'firefox',                 ''],
+      ['',            'iphone',               '9.1'],
+      ['',            'iphone',               '8.4'],
+      ['',            'safari',                 '9'],
+      ['',            'safari',                 '8'],
+      ['windows 10',  'microsoftedge',           ''],
+      ['windows 10',  'internet explorer',     '11'],
+      ['windows 8',   'internet explorer',     '10'],
+    ]
+  }
+  if (process.env.TRAVIS_JOB_NUMBER) {
+    body.tunnelIdentifier = process.env.TRAVIS_JOB_NUMBER
+  }
   request(url, {
     method: 'POST',
     headers: {
@@ -41,26 +62,15 @@ function runTests () {
     var response = JSON.parse(data)
     if (!response['js tests']) throw new Error(data)
     setTimeout(checkTestStatus.bind(response), 2000)
-  }).end(JSON.stringify({
-    url: 'http://localhost:' + server.port,
-    build: String(Math.random()).slice(2),
-    framework: 'custom',
-    platforms: [
-      [ 'linux',      'googlechrome',      '' ],
-      [ 'linux',      'firefox',           '' ],
-      [ '',           'iphone',         '9.1' ],
-      [ 'windows 10', 'microsoftedge',     '' ],
-      [ 'windows 10', '',              '11.0' ],
-      [ 'windows 10', '',              '10.0' ],
-    ]
-  }))
+  }).end(JSON.stringify(body))
 }
 
 function checkTestStatus () {
   var self = this
   var url = 'https://saucelabs.com/rest/v1/' + process.env.SAUCE_USERNAME + '/js-tests/status'
-  var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_KEY).toString('base64')
+  var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY).toString('base64')
   var data = ''
+
   request(url, {
     method: 'POST',
     headers: {
@@ -70,15 +80,37 @@ function checkTestStatus () {
   }).on('data', function (d) {
     data += d
   }).on('end', function () {
-    data = JSON.parse(data)
-    if (data.completed) {
-      data['js tests'].forEach(function (test) {
-        var result = test.result ? (test.result.passed + ' / ' + test.result.total) : 'incomplete'
-        console.log(result + ' - ' + test.platform.join(' '))
-      })
-      process.exit(0)
-      return
-    }
+    reviewTests(JSON.parse(data)['js tests'])
     setTimeout(checkTestStatus.bind(self), 10000)
   }).end(JSON.stringify(this))
+}
+
+function reviewTests (tests) {
+  var complete = 0
+  tests.forEach(function (test) {
+    var name = test.platform.join(' ').trim()
+    var status = test.status
+    var result = test.result
+    var platform = platforms[name]
+    if (!platform) platform = platforms[name] = {}
+    if (status && status !== platform.status) {
+      if (status === 'test error') {
+        throw new Error(name)
+      } else {
+        platform.status = status
+        console.log(name + ' - ' + status)
+      }
+    } else if (result !== undefined) {
+      complete++
+      if (platform.result === undefined) {
+        platform.result = result.passed === result.total
+        console.log(name + ' - complete - ' + result.passed + ' / ' + result.total)
+      }
+    }
+  })
+  if (complete === tests.length) {
+    var success = true
+    for (var name in platforms) success = platforms[name].result
+    process.exit(success ? 0 : 1)
+  }
 }
