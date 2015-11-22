@@ -95,7 +95,7 @@ function reviewTests (tests) {
     if (!platform) platform = platforms[name] = {}
     if (status && status !== platform.status) {
       if (status === 'test error') {
-        throw new Error(name)
+        throw new Error(JSON.stringify(test, null, 2))
       } else {
         platform.status = status
         console.log(name + ' - ' + status)
