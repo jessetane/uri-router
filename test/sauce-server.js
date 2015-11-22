@@ -36,15 +36,15 @@ function runTests () {
     build: process.env.TRAVIS_BUILD_NUMBER || String(Math.random()).slice(2),
     framework: 'custom',
     platforms: [
-      ['linux',       'googlechrome',            ''],
-      ['linux',       'firefox',                 ''],
-      ['',            'iphone',               '9.1'],
-      ['',            'iphone',               '8.4'],
-      ['',            'safari',                 '9'],
-      ['',            'safari',                 '8'],
-      ['windows 10',  'microsoftedge',           ''],
-      ['windows 10',  'internet explorer',     '11'],
-      ['windows 8',   'internet explorer',     '10'],
+      ['linux',       'googlechrome',         ''],
+      ['linux',       'firefox',              ''],
+      ['',            'iphone',            '9.1'],
+      ['',            'iphone',            '8.4'],
+      ['',            'safari',              '9'],
+      ['',            'safari',              '8'],
+      ['windows 10',  'microsoftedge',        ''],
+      ['windows 10',  'internet explorer',  '11'],
+      ['windows 8',   'internet explorer',  '10']
     ]
   }
   if (process.env.TRAVIS_JOB_NUMBER) {

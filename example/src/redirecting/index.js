@@ -28,7 +28,7 @@ function Redirecting (uri) {
 
 function show (uri) {
   render(this, {
-    '#show-protected': { 
+    '#show-protected': {
       _attr: {
         disabled: uri.pathname === uri.base ? null : 'disabled'
       }

@@ -33,6 +33,6 @@ function deselect (evt) {
   }
 }
 
-function One() { return render('<h3 class="center">1</h3>') }
-function Two() { return render('<h3 class="center">2</h3>') }
-function Three() { return render('<h3 class="center">3</h3>') }
+function One () { return render('<h3 class="center">1</h3>') }
+function Two () { return render('<h3 class="center">2</h3>') }
+function Three () { return render('<h3 class="center">3</h3>') }

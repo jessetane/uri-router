@@ -57,7 +57,7 @@ tape('recursive push / pop', function (t) {
 tape('synchronous navigation order is correct', function (t) {
   t.plan(1)
 
-  var r1 = router({
+  var r = router({
     watch: 'pathname',
     routes: [
       ['.*', any]
@@ -75,6 +75,7 @@ tape('synchronous navigation order is correct', function (t) {
   function any () {
     pathnames.push(window.location.pathname)
     if (++n === 5) {
+      r.destroy()
       t.deepEqual(pathnames, [
         '/',
         '/a',
@@ -89,7 +90,7 @@ tape('synchronous navigation order is correct', function (t) {
 tape('back and forward buttons order is correct', function (t) {
   t.plan(1)
 
-  var r1 = router({
+  var r = router({
     watch: 'pathname',
     routes: [
       ['.*', any]
@@ -116,6 +117,7 @@ tape('back and forward buttons order is correct', function (t) {
   function any () {
     pathnames.push(window.location.pathname)
     if (++n === 5) {
+      r.destroy()
       window.removeEventListener('popstate', onpopstate)
       t.deepEqual(pathnames, [
         '/',
@@ -131,7 +133,7 @@ tape('back and forward buttons order is correct', function (t) {
 tape('replace', function (t) {
   t.plan(1)
 
-  var r1 = router({
+  var r = router({
     watch: 'pathname',
     routes: [
       ['.*', any]
@@ -148,6 +150,7 @@ tape('replace', function (t) {
   function any () {
     pathnames.push(window.location.pathname)
     if (++n === 4) {
+      r.destroy()
       t.deepEqual(pathnames, [
         '/',
         '/a',
@@ -203,11 +206,11 @@ tape('middleware', function (t) {
   var r = router({
     watch: 'pathname',
     routes: [
-      ['/fail',   t.fail],
-      ['.*', middleware1],
-      ['.*', middleware2],
-      ['.*',     handler],
-      ['.*',      t.fail]
+      ['/fail',      t.fail],
+      ['.*',    middleware1],
+      ['.*',    middleware2],
+      ['.*',        handler],
+      ['.*',         t.fail]
     ]
   })
 
@@ -361,7 +364,7 @@ tape('view lifecycle - async hide()', function (t) {
     setTimeout(function () {
       cb()
       t.equal(app.innerHTML, '')
-    }.bind(this))
+    })
   }
 })
 
@@ -374,7 +377,7 @@ tape('reusable views', function (t) {
     watch: 'pathname',
     outlet: app,
     routes: [
-      ['(/)(.+)', createView],
+      ['(/)(.+)', createView]
     ]
   })
 
@@ -417,7 +420,7 @@ tape('search', function (t) {
     ]
   })
 
-  var n = 0;
+  var n = 0
   var queries = []
 
   router.search({ a: '41' })
@@ -428,6 +431,7 @@ tape('search', function (t) {
   function any (uri) {
     queries.push(uri.query)
     if (++n === 5) {
+      r.destroy()
       t.deepEqual(queries, [
         {},
         { a: '41' },

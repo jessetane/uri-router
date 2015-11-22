@@ -4,7 +4,7 @@ module.exports = function () {
 
 var inherits = require('inherits')
 
-inherits(WebComponent, HTMLElement)
+inherits(WebComponent, window.HTMLElement)
 
 function WebComponent () {}
 

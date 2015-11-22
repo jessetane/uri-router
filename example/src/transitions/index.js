@@ -2,7 +2,6 @@ module.exports = TransitionsView
 
 var router = require('../../../')
 var render = require('hyperglue2')
-var inherits = require('inherits')
 var template = require('./index.html')
 var templateview = require('./transition.html')
 var model = require('./model')
@@ -42,7 +41,7 @@ function Transition () {
     _attr: {
       style: 'background:' + m.color + ';'
     },
-    h3: m.title,
+    h3: m.title
   })
   el.show = showTransition
   el.hide = hideTransition
