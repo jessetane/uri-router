@@ -4,15 +4,17 @@ A small framework for building URI driven DOM applications.
 [![saucelabs](https://saucelabs.com/browser-matrix/uri-router.svg)](https://saucelabs.com/u/uri-router)
 
 ## Why
-In my opinion, a useful pushState router should:
-* Update the history for _all_ URI changes unless explicitly told otherwise.
-* Capture and prevent default link-click and form-submit behaviors.
-* Be nestable and have an adjustable base for module-pattern compatibility.
-* Optionally handle adding and removing views from the DOM automatically.
-* Have a simple, optional callback mechanism to support transitions.
-* Queue recursive updates as described in the [spec](http://www.w3.org/html/wg/drafts/html/master/single-page.html#traverse-the-history-by-a-delta).
+Views that require knowlege of the outside DOM aren't very flexible. uri-router lets you use self contained web components as views by taking over the responsibility of creating, attaching and removing elements from the DOM.
 
 ## How
+* Optionally handles adding and removing elements from the DOM automatically.
+* Captures and prevents default link-click and form-submit behaviors.
+* Pushes the history for _any_ location change, hashes are not special.
+* Provides an optional callback mechanism to support transitions.
+* Queues recursive updates properly (default window.history.back() runs in next tick, but disregards succeeding pushState calls).
+* Nestable!
+
+## Example
 index.html
 ``` html
 <!doctype html>
@@ -105,14 +107,18 @@ function hide () {
   this.parentNode.removeChild(this)
 }
 ```
-The example above is pretty basic, see the example for fancier stuff uri-router can do.
 
-## Example
-``` bash
-$ git clone https://github.com/jessetane/uri-router
-$ cd uri-router
+The code above is pretty basic, check out [the example app](https://github.com/jessetane/uri-router/tree/master/example) for fancier things:
+
+``` shell
 $ npm install
 $ npm run example
+```
+
+## Test
+``` shell
+$ npm run test-local
+$ SAUCE_USERNAME=x SAUCE_ACCESS_KEY=y npm run test
 ```
 
 ## Require
