@@ -7,7 +7,7 @@ Router.search = search
 
 var hijack = require('./lib/hijack')
 var matchroute = require('./lib/match-route')
-var qs = require('querystring')
+var URI = require('./lib/uri')
 
 var state = 0
 var locked = false
@@ -15,8 +15,7 @@ var updateNeeded = false
 var routers = []
 var queue = []
 var uris = []
-var uriParser = document.createElement('A')
-var lastUri = Uri(window.location)
+var lastUri = URI(window.location)
 lastUri.init = true
 
 // hijack link clicks and form submissions
@@ -33,38 +32,8 @@ window.history.replaceState(
   window.location.href
 )
 
-function Uri (uri) {
-  if (typeof uri === 'string') {
-    uriParser.href = uri.href || uri
-    uri = uriParser
-  }
-  uri = {
-    // https://url.spec.whatwg.org/
-    href: uri.href,
-    origin: uri.origin,
-    protocol: uri.protocol,
-    hostname: uri.hostname,
-    port: uri.port,
-    pathname: uri.pathname,
-    search: uri.search,
-    hash: uri.hash,
-    host: uri.host,
-    // non-standard, see readme
-    init: uri.init,
-    back: uri.back,
-    replace: uri.replace,
-    base: uri.base,
-    query: uri.query,
-    params: uri.params
-  }
-  if (!uri.query) {
-    uri.query = qs.parse(uri.search.slice(1))
-  }
-  return uri
-}
-
 function onpopstate (evt) {
-  var uri = Uri(window.location)
+  var uri = URI(window.location)
   uri.popstate = evt.state
   if (uri.popstate < state) {
     uris.unshift(uri)
@@ -83,9 +52,9 @@ function onclick (evt, target) {
       evt.preventDefault()
       return
     }
-    uri = Uri(evt.target.action)
+    uri = URI(evt.target.action)
   }
-  uri = Uri(uri)
+  uri = URI(uri)
   if (uri.origin !== window.location.origin) return
   evt.preventDefault()
   push(uri)
@@ -93,7 +62,7 @@ function onclick (evt, target) {
 
 function push (uri, replace) {
   if (typeof uri === 'string') {
-    uri = Uri(uri)
+    uri = URI(uri)
   }
   uri.replace = replace
   uris.push(uri)
@@ -170,7 +139,7 @@ function onchange () {
       if (!value) delete tmp[key]
       else tmp[key] = value
     }
-    tmp = Uri('?' + qs.stringify(tmp))
+    tmp = URI('?' + URI.encodeQuerystring(tmp))
     tmp.replace = uri.replace
     uri = tmp
   }
@@ -220,7 +189,7 @@ function update (router, routes, uri, middlewareDidRun) {
   }
   var match = matchroute(watched, routes)
   var constructor = match && match.handler
-  uri = middlewareDidRun ? uri : Uri(uri)
+  uri = middlewareDidRun ? uri : URI(uri)
   uri[router.watch] = watched
   if (match) {
     uri.base = router.base + match.base
