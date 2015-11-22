@@ -1,20 +1,21 @@
 module.exports = Router
 
-Router.push = push // window.history.pushState() does not dispatch an event, so use Router.push() instead
-Router.pop = pop   // just an alias for window.history.back()
+Router.push = push
 Router.replace = replace
+Router.pop = pop
+Router.search = search
 
 var hijack = require('./lib/hijack')
-var firstmatch = require('./lib/first-match')
-var qs = require('querystring/decode')
+var matchroute = require('./lib/match-route')
+var qs = require('querystring')
 
-var historyStart = window.history.length
-var historyLength = historyStart
-var updateNeeded = false
+var state = 0
 var locked = false
+var updateNeeded = false
 var routers = []
 var queue = []
 var uris = []
+var uriParser = document.createElement('A')
 var lastUri = Uri(window.location)
 lastUri.init = true
 
@@ -27,16 +28,15 @@ window.addEventListener('popstate', onpopstate)
 
 // replace initial state
 window.history.replaceState(
-  historyLength,
+  state,
   null,
   window.location.href
 )
 
 function Uri (uri) {
   if (typeof uri === 'string') {
-    var a = document.createElement('A')
-    a.href = uri.href || uri
-    uri = a
+    uriParser.href = uri.href || uri
+    uri = uriParser
   }
   uri = {
     // https://url.spec.whatwg.org/
@@ -49,16 +49,16 @@ function Uri (uri) {
     search: uri.search,
     hash: uri.hash,
     host: uri.host,
-    // non-standard
+    // non-standard, see readme
     init: uri.init,
     back: uri.back,
     replace: uri.replace,
     base: uri.base,
-    params: uri.params,
-    query: uri.query
+    query: uri.query,
+    params: uri.params
   }
-  if (!uri.query && uri.search) {
-    uri.query = qs(uri.search.slice(1))
+  if (!uri.query) {
+    uri.query = qs.parse(uri.search.slice(1))
   }
   return uri
 }
@@ -66,8 +66,14 @@ function Uri (uri) {
 function onpopstate (evt) {
   var uri = Uri(window.location)
   uri.popstate = evt.state
-  uris.push(uri)
-  onchange()
+  if (uri.popstate < state) {
+    uris.unshift(uri)
+    locked = false
+    onchange()
+  } else {
+    uris.push(uri)
+    onchange()
+  }
 }
 
 function onclick (evt, target) {
@@ -94,19 +100,32 @@ function push (uri, replace) {
   onchange()
 }
 
-function pop () {
-  window.history.back()
-}
-
 function replace (uri) {
   push(uri, true)
 }
 
+function pop () {
+  uris.push({
+    actionRequired: 'back'
+  })
+  onchange()
+}
+
+function search (query, replace) {
+  uris.push({
+    actionRequired: 'search',
+    query: query,
+    replace: replace
+  })
+  onchange()
+}
+
 function Router (opts) {
   var router = opts
+  router.base = opts.base || ''
   router.destroy = destroy
   queue.push(router)
-  if (updateNeeded || locked) return router
+  if (updateNeeded !== false || locked) return router
   updateNeeded = setTimeout(function () {
     updateNeeded = false
     locked = true
@@ -119,6 +138,7 @@ function Router (opts) {
 
 function destroy () {
   var router = this
+  router.destroyed = true
   routers = routers.filter(function (r) {
     return r !== router
   })
@@ -129,30 +149,49 @@ function destroy () {
 
 function onchange () {
   if (locked) return
-  var uri = uris.shift()
-  if (!uri) return
-  if (lastUri && lastUri.href === uri.href) return
+  if (!uris.length) return
   locked = true
-  if (updateNeeded) {
+  if (updateNeeded !== false) {
     clearTimeout(updateNeeded)
     updateNeeded = false
     serviceQueue()
   }
-  lastUri = uri
-  if (uri.popstate) {
-    if (!isNaN(uri.popstate)) {
-      uri.back = historyLength >= uri.popstate
-      historyLength = uri.popstate
+  var uri = uris.shift()
+  if (uri.actionRequired === 'back') {
+    window.history.back()
+    return
+  } else if (uri.actionRequired === 'search') {
+    var tmp = {}
+    for (var key in lastUri.query) {
+      tmp[key] = lastUri.query[key]
     }
+    for (key in uri.query) {
+      var value = uri.query[key]
+      if (!value) delete tmp[key]
+      else tmp[key] = value
+    }
+    tmp = Uri('?' + qs.stringify(tmp))
+    tmp.replace = uri.replace
+    uri = tmp
+  }
+  if (lastUri.href === uri.href) {
+    locked = false
+    onchange()
+    return
+  }
+  lastUri = uri
+  if (uri.popstate !== undefined) {
+    uri.back = uri.popstate < state
+    state = uri.popstate
   } else {
     if (uri.replace) {
-      window.history.replaceState(historyLength, null, uri.href)
+      window.history.replaceState(state, null, uri.href)
     } else {
-      window.history.pushState(++historyLength, null, uri.href)
+      window.history.pushState(++state, null, uri.href)
     }
   }
-  uri.init = historyLength === historyStart
-  routers.slice().forEach(function (router) {
+  uri.init = state === 0
+  routers.forEach(function (router) {
     update(router, router.routes, uri)
   })
   serviceQueue()
@@ -173,20 +212,19 @@ function serviceQueue () {
   }
 }
 
-function update (router, routes, uri, middleware) {
+function update (router, routes, uri, middlewareDidRun) {
+  if (router.destroyed) return
   var watched = uri[router.watch]
-  if (router.base && !middleware) {
-    if (watched.indexOf(router.base) === 0) {
-      watched = watched.slice(router.base.length)
-    }
+  if (router.base && !middlewareDidRun) {
+    watched = watched.slice(router.base.length)
   }
-  var match = firstmatch(watched, routes)
-  var constructor = match && match.data
-  uri = middleware ? uri : Uri(uri)
+  var match = matchroute(watched, routes)
+  var constructor = match && match.handler
+  uri = middlewareDidRun ? uri : Uri(uri)
   uri[router.watch] = watched
   if (match) {
-    uri.base = match.id
-    uri.params = match.capture
+    uri.base = router.base + match.base
+    uri.params = match.params
   }
   var last = router.current
   if (last) {
