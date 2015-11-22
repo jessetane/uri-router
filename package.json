@@ -10,13 +10,15 @@
     "url"
   ],
   "scripts": {
-    "test": "PORT=7357 LOCAL=true node test/server",
+    "test": "node test/sauce-server",
+    "test-local": "PORT=7357 node test/local-server",
     "example": "PORT=8090 node example/server"
   },
   "devDependencies": {
     "app-server": "github:jessetane/app-server",
     "build-js": "github:jessetane/build-js",
     "hyperglue2": "^2.0.0",
+    "hyperquest": "^1.2.0",
     "inherits": "^2.0.1",
     "tape": "^4.2.2",
     "txtify2": "^2.0.0"

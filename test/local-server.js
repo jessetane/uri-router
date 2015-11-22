@@ -1,16 +1,15 @@
 var JSBuilder = require('build-js')
 var http = require('app-server')
 
-if (process.env.LOCAL) {
-  var js = new JSBuilder({
-    src: 'test/index.js',
-    dest: 'test/build.js'
-  })
-  js.watch(function (err) {
-    if (err) console.log(err.message)
-    else console.log('test rebuilt')
-  })
-}
+var js = new JSBuilder({
+  src: 'test/index.js',
+  dest: 'test/build.js'
+})
+
+js.watch(function (err) {
+  if (err) console.log(err.message)
+  else console.log('test rebuilt')
+})
 
 var server = http({
   share: 'test'

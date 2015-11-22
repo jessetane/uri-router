@@ -1,5 +1,9 @@
 var tape = require('tape')
 
+if (process.env.SAUCE) {
+  require('./sauce-tape')(tape)
+}
+
 require('../lib/match-route/test')
 
 var router = require('../')
