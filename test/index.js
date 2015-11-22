@@ -1,10 +1,10 @@
 var tape = require('tape')
 
-require('../lib/first-match/test')
+require('../lib/match-route/test')
 
 var router = require('../')
 
-tape('initial popstate', function (t) {
+tape('initial', function (t) {
   t.plan(2)
 
   var r = router({
@@ -47,6 +47,110 @@ tape('recursive push / pop', function (t) {
       r.destroy()
     }
     n++
+  }
+})
+
+tape('synchronous navigation order is correct', function (t) {
+  t.plan(1)
+
+  var r1 = router({
+    watch: 'pathname',
+    routes: [
+      ['.*', any]
+    ]
+  })
+
+  var n = 0
+  var pathnames = []
+
+  router.push('/a')
+  router.push('/b')
+  router.pop()
+  router.push('/')
+
+  function any () {
+    pathnames.push(window.location.pathname)
+    if (++n === 5) {
+      t.deepEqual(pathnames, [
+        '/',
+        '/a',
+        '/b',
+        '/a',
+        '/'
+      ])
+    }
+  }
+})
+
+tape('back and forward buttons order is correct', function (t) {
+  t.plan(1)
+
+  var r1 = router({
+    watch: 'pathname',
+    routes: [
+      ['.*', any]
+    ]
+  })
+
+  var n = 0
+  var pathnames = []
+  var ops = [
+    'back',
+    'forward',
+    'back'
+  ]
+
+  router.push('/a')
+  window.addEventListener('popstate', onpopstate)
+  setTimeout(onpopstate)
+
+  function onpopstate () {
+    var op = ops.shift()
+    window.history[op]()
+  }
+
+  function any () {
+    pathnames.push(window.location.pathname)
+    if (++n === 5) {
+      window.removeEventListener('popstate', onpopstate)
+      t.deepEqual(pathnames, [
+        '/',
+        '/a',
+        '/',
+        '/a',
+        '/'
+      ])
+    }
+  }
+})
+
+tape('replace', function (t) {
+  t.plan(1)
+
+  var r1 = router({
+    watch: 'pathname',
+    routes: [
+      ['.*', any]
+    ]
+  })
+
+  var n = 0
+  var pathnames = []
+
+  router.push('/a')
+  router.replace('/b')
+  router.pop()
+
+  function any () {
+    pathnames.push(window.location.pathname)
+    if (++n === 4) {
+      t.deepEqual(pathnames, [
+        '/',
+        '/a',
+        '/b',
+        '/'
+      ])
+    }
   }
 })
 
@@ -191,7 +295,7 @@ tape('view lifecycle without dom outlet', function (t) {
   var r = router({
     watch: 'pathname',
     routes: [
-      ['/a', View]
+      ['/a', createView]
     ]
   })
 
@@ -201,7 +305,7 @@ tape('view lifecycle without dom outlet', function (t) {
   t.equal(app.innerHTML, '')
   r.destroy()
 
-  function View () {
+  function createView () {
     var el = app
     el.show = show
     el.hide = hide
@@ -225,7 +329,7 @@ tape('view lifecycle - async hide()', function (t) {
     watch: 'pathname',
     outlet: app,
     routes: [
-      ['/a', View]
+      ['/a', createView]
     ]
   })
 
@@ -235,7 +339,7 @@ tape('view lifecycle - async hide()', function (t) {
   t.equal(app.innerHTML, '<div id="view">42</div>')
   r.destroy()
 
-  function View () {
+  function createView () {
     var el = document.createElement('DIV')
     el.id = 'view'
     el.textContent = '42'
@@ -260,16 +364,17 @@ tape('view lifecycle - async hide()', function (t) {
 tape('reusable views', function (t) {
   t.plan(4)
 
-  View.reusable = true
-
   var app = document.querySelector('#app')
+
   var r = router({
     watch: 'pathname',
     outlet: app,
     routes: [
-      ['(/)(.+)', View],
+      ['(/)(.+)', createView],
     ]
   })
+
+  createView.reusable = true
 
   router.push('/a')
   t.equal(app.innerHTML, '<div id="view">a</div>')
@@ -279,7 +384,7 @@ tape('reusable views', function (t) {
   t.equal(app.innerHTML, '')
   r.destroy()
 
-  function View () {
+  function createView () {
     var el = document.createElement('DIV')
     el.id = 'view'
     el.x = 0
@@ -295,5 +400,37 @@ tape('reusable views', function (t) {
 
   function hide () {
     t.equal(this.x, 2)
+  }
+})
+
+tape('search', function (t) {
+  t.plan(1)
+
+  var r = router({
+    watch: 'pathname',
+    routes: [
+      ['.*', any]
+    ]
+  })
+
+  var n = 0;
+  var queries = []
+
+  router.search({ a: '41' })
+  router.search({ b: '42' })
+  router.pop()
+  router.search({ a: null })
+
+  function any (uri) {
+    queries.push(uri.query)
+    if (++n === 5) {
+      t.deepEqual(queries, [
+        {},
+        { a: '41' },
+        { a: '41', b: '42' },
+        { a: '41' },
+        {}
+      ])
+    }
   }
 })
