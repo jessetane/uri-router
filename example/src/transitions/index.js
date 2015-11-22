@@ -1,54 +1,62 @@
-var router = require('../../../');
-var render = require('hyperglue2');
-var inherits = require('inherits');
-var template = require('./index.html');
-var templateview = require('./transition.html');
-var model = require('./model');
+module.exports = TransitionsView
 
-module.exports = TransitionsView;
+var router = require('../../../')
+var render = require('hyperglue2')
+var inherits = require('inherits')
+var template = require('./index.html')
+var templateview = require('./transition.html')
+var model = require('./model')
 
-function TransitionsView() {
-  this.el = render(template);
-  this.router = router({
+TransitionsView.reusable = true
+
+function TransitionsView () {
+  var el = render(template)
+  el.hide = hide
+  el.router = router({
     watch: 'pathname',
-    outlet: this.el.querySelector('.outlet'),
-    routes: {
-      '/transitions/.*': Transition,
-    }
-  });
+    outlet: el.querySelector('.outlet'),
+    routes: [
+      ['/transitions/.*', Transition]
+    ]
+  })
+  el.deselect = deselect.bind(el)
+  document.addEventListener('click', el.deselect)
+  return el
+}
 
-  this.deselect = deselect.bind(this);
-  document.addEventListener('click', this.deselect);
-};
+function hide () {
+  document.removeEventListener('click', this.deselect)
+  this.router.destroy()
+}
 
-TransitionsView.prototype.hide = function() {
-  this.router.destroy();
-  document.removeEventListener('click', this.deselect);
-};
-
-function deselect(evt) {
+function deselect (evt) {
   if (evt.target.nodeName !== 'A') {
-    router.push('/transitions');
+    router.push('/transitions')
   }
 }
 
-function Transition() {
-  var id = window.location.pathname.replace(/.*\//, '');
-  var m = model[id];
-  this.el = render(templateview, {
-    _attr: { style: 'background:' + m.color + ';' },
+function Transition () {
+  var id = window.location.pathname.replace(/.*\//, '')
+  var m = model[id]
+  var el = render(templateview, {
+    _attr: {
+      style: 'background:' + m.color + ';'
+    },
     h3: m.title,
-  });
+  })
+  el.show = showTransition
+  el.hide = hideTransition
+  return el
 }
 
-Transition.prototype.show = function() {
-  var self = this;
-  window.getComputedStyle(self.el).opacity; // need to do this or the transition doesn't get applied
-  self.el.style.opacity = '1';
-};
+function showTransition () {
+  window.getComputedStyle(this).opacity // need to do this or the transition doesn't get applied
+  this.style.opacity = '1'
+}
 
-Transition.prototype.hide = function(r, cb) {  // if hide() accepts a callback the router will wait before removing the element
-  var self = this;
-  this.el.style.opacity = '0';
-  this.el.addEventListener('transitionend', cb);
-};
+function hideTransition (uri, cb) { // if hide() accepts a callback the router will wait before removing the element
+  this.style.opacity = '0'
+  this.addEventListener('transitionend', function () {
+    cb()
+  })
+}

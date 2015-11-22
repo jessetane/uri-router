@@ -1,11 +1,15 @@
-var render = require('hyperglue2');
+module.exports = NotFound
 
-module.exports = NotFound;
+var render = require('hyperglue2')
 
-function NotFound() {
-  this.el = render(require('./index.html'));
-};
+function NotFound () {
+  var el = render(require('./index.html'))
+  el.show = show
+  return el
+}
 
-NotFound.prototype.show = function() {
-  render(this.el, { p: window.location.href + ' was not found' });
-};
+function show () {
+  render(this, {
+    p: window.location.href + ' was not found'
+  })
+}

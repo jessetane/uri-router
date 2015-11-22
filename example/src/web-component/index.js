@@ -1,27 +1,29 @@
-var inherits = require('inherits');
+module.exports = function () {
+  return document.createElement('web-component')
+}
 
-module.exports = 'web-component'; // export tag name for instantiating via document.createElement(tagName)
+var inherits = require('inherits')
 
-function WebComponent() {}
-inherits(WebComponent, HTMLElement);
+inherits(WebComponent, HTMLElement)
 
-WebComponent.prototype.createdCallback = function() {
-  console.log('web-component lifecycle: createdCallback');
-  var shadow = this.createShadowRoot();
-  shadow.innerHTML = require('./index.html');
-};
+function WebComponent () {}
 
-WebComponent.prototype.attachedCallback = function() {
-  console.log('web-component lifecycle: attachedCallback');
-};
+WebComponent.prototype.createdCallback = function () {
+  console.log('web-component lifecycle: createdCallback')
+  var shadow = this.createShadowRoot()
+  shadow.innerHTML = require('./index.html')
+}
 
-WebComponent.prototype.detachedCallback = function() {
-  console.log('web-component lifecycle: detachedCallback');
-};
+WebComponent.prototype.attachedCallback = function () {
+  console.log('web-component lifecycle: attachedCallback')
+}
+
+WebComponent.prototype.detachedCallback = function () {
+  console.log('web-component lifecycle: detachedCallback')
+}
 
 if (document.registerElement) {
-  document.registerElement('web-component', WebComponent);
-}
-else {
-  console.warn('your browser does not support web components');
+  document.registerElement('web-component', WebComponent)
+} else {
+  console.warn('your browser does not support web components')
 }

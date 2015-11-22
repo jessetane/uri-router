@@ -1,32 +1,39 @@
-var router = require('../../../');
-var render = require('hyperglue2');
-var robots = require('./model');
+module.exports = Search
 
-module.exports = Search;
+var router = require('../../../')
+var render = require('hyperglue2')
+var robots = require('./model')
 
-function Search() {
-  this.el = render(require('./index.html'));
-  this.input = this.el.querySelector('input');
-  this.input.addEventListener('keyup', function(evt) {
-    router.search({ filter: evt.target.value });
-  });
-};
+Search.reusable = true
 
-Search.prototype.show = function(router) {
-  var data = robots;
-  var query = router.location.query;
-  var filter = new RegExp(query.filter, 'i');
+function Search () {
+  var el = render(require('./index.html'))
+  el.show = show
+  el.input = el.querySelector('input')
+  el.input.addEventListener('keyup', function (evt) {
+    router.search({
+      filter: evt.target.value
+    })
+  })
+  return el
+}
 
+function show (uri) {
+  var data = robots
+  var query = uri.query
+  var filter = new RegExp(query.filter, 'i')
   if (filter) {
-    data = robots.filter(function(r) {
-      return r.match(filter);
-    });
+    data = robots.filter(function (r) {
+      return r.match(filter)
+    })
   }
-  
-  data = { 'li': data };
+  data = { 'li': data }
   if (this.input.value !== query.filter) {
-    data.input = { _attr: { value: query.filter }};
+    data.input = {
+      _attr: {
+        value: query.filter
+      }
+    }
   }
-
-  render(this.el, data);
-};
+  render(this, data)
+}
