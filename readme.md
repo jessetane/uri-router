@@ -89,12 +89,12 @@ signup.js (a view that handles adding and removing itself from the DOM)
 ``` js
 module.exports = Signup
 
-function Signup() {
+function Signup () {
   var el = document.createElement('H1')
   el.innerHTML = 'Sign up'
   el.show = show
   el.hide = hide
-  return
+  return el
 }
 
 function show () {
