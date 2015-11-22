@@ -1,8 +1,10 @@
 language: node_js
 node_js:
   - '5'
+sudo: false
+env:
+  global:
+    - SAUCE_USERNAME=uri-router
+    - secure: "Mb0+p5zr6W4jJGI0+yE3eMA6jpo7nRlTs4XwIlOmLbTFD0folRFZwL2brQmNuOuhLPDBaaIsUDVpppF5CRj/CChYYI5bJNRxKQZV6RUpDWeYunG2/Df4w91NP454NUOyaW9d0XegL4bxtvRRNhTPQHYw9+w4wJ3rZUXetP0aghg="
 addons:
-  sauce_connect:
-    username: "uri-router"
-    access_key:
-      secure: "QJjzonZuEdpqsZjAmp96QmOj4n8F6WEbGI3wl+PJVVTGwZXOVIYeZ24d/jGWXPl++kaYqhRLlCVC5KSzVQoDqCi8kGbos6H10qNh0bW6DPbejOeKBONETrCFWgpXr+5xelY5OCUi38bmVGiNyNjlK3bVBEUqTjiL6vNewwOCSrM="
+  sauce_connect: true
