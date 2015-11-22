@@ -12,7 +12,7 @@
   "scripts": {
     "test": "node test/sauce-server",
     "test-local": "PORT=7357 node test/local-server",
-    "example": "PORT=8090 node example/server"
+    "example": "node example/server"
   },
   "devDependencies": {
     "app-server": "github:jessetane/app-server",
