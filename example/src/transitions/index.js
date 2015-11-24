@@ -49,13 +49,11 @@ function Transition () {
 }
 
 function showTransition () {
-  window.getComputedStyle(this).opacity // need to do this or the transition doesn't get applied
+  window.getComputedStyle(this).opacity
   this.style.opacity = '1'
 }
 
-function hideTransition (uri, cb) { // if hide() accepts a callback the router will wait before removing the element
+function hideTransition (uri, cb) {
   this.style.opacity = '0'
-  this.addEventListener('transitionend', function () {
-    cb()
-  })
+  this.addEventListener('transitionend', cb)
 }
