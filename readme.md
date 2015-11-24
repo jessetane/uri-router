@@ -67,15 +67,9 @@ module.exports = function () {
 
 about.js (a web component as a view)
 ``` js
-module.exports = function () {
-  return document.createElement('about-component')
+var About = {
+  prototype: Object.create(window.HTMLElement.prototype)
 }
-
-var inherits = require('inherits')
-
-inherits(About, HTMLElement)
-
-function About () {}
 
 About.prototype.createdCallback = function () {
   var shadow = this.createShadowRoot()
