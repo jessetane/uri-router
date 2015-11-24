@@ -3,17 +3,6 @@ A small framework for building URI driven DOM applications.
 
 [![saucelabs](https://saucelabs.com/browser-matrix/uri-router.svg)](https://saucelabs.com/u/uri-router)
 
-## Why
-Views that require knowlege of the outside DOM aren't very flexible. uri-router lets you use self contained web components as views by taking over the responsibility of creating, attaching and removing elements from the DOM.
-
-## How
-* Optionally handles adding and removing elements from the DOM automatically.
-* Captures and prevents default link-click and form-submit behaviors.
-* Pushes the history for _any_ location change, hashes are not special.
-* Provides an optional callback mechanism to support transitions.
-* Queues recursive updates properly (window.history.back runs in next tick, but disregards succeeding pushState calls).
-* Nestable!
-
 ## Example
 index.html
 ``` html
@@ -23,44 +12,58 @@ index.html
     <nav>
       <a href="/">home</a> |
       <a href="/about">about</a> |
-      <a href="#signup">signup</a>
+      <a href="/contact">contact</a>
     </nav>
     <div id="pages"></div>
-    <div id="modals"></div>
   </body>
   <script type="text/javascript" src="/app.js"></script>
 </html>
 ```
-
 app.js
 ``` js
 var router = require('uri-router')
+var nav = require('./nav')
 var home = require('./home')
 var about = require('./about')
-var signup = require('./signup')
+var contact = require('./contact')
+
+router({
+  watch: 'pathname',
+  routes: [
+    ['.*', nav]
+  ]
+})
 
 router({
   watch: 'pathname',
   outlet: document.querySelector('#pages'),
   routes: [
-    ['/',       home],
-    ['/about', about]
+    ['/',           home],
+    ['/about',     about],
+    ['/contact', contact]
   ]
 })
+```
 
-router({
-  watch: 'hash',
-  routes: [
-    ['#sign-up', signup]
-  ]
-})
+nav.js (a view that's already on the DOM)
+``` js
+module.exports = document.querySelector('nav')
+
+var qsa = require('qsa-es5')
+
+module.exports.show = function (uri) {
+  qsa('a', this).forEach(function (a) {
+    var active = a.getAttribute('href') === uri.pathname
+    a.style.textDecoration = active ? 'underline' : 'none'
+  })
+}
 ```
 
 home.js (a plain DOM element as a view)
 ``` js
 module.exports = function () {
   var el = document.createElement('H1')
-  el.innerHTML = 'Home'
+  el.innerHTML = '<h1>Home</h1>'
   return el
 }
 ```
@@ -79,116 +82,115 @@ About.prototype.createdCallback = function () {
 module.exports = document.registerElement('about-component', About)
 ```
 
-signup.js (a view that handles adding and removing itself from the DOM)
+contact.js (a view that uses lifecycle hooks to transition in and out)
 ``` js
-module.exports = Signup
-
-function Signup () {
-  var el = document.createElement('H1')
-  el.innerHTML = 'Sign up'
+module.exports = function () {
+  var el = document.createElement('div')
+  el.innerHTML = '<h1>Contact</h1>'
   el.show = show
   el.hide = hide
+  el.style.transition = 'opacity 0.5s'
   return el
 }
 
 function show () {
-  if (!this.parentNode) {
-    document.querySelector('#modals').appendChild(this)
-  }
+  window.getComputedStyle(this).opacity
+  this.style.opacity = '1'
 }
 
-function hide () {
-  this.parentNode.removeChild(this)
+function hide (uri, cb) {
+  this.style.opacity = '0'
+  this.addEventListener('transitionend', cb)
 }
 ```
 
 The code above is pretty basic, check out [the example app](https://github.com/jessetane/uri-router/tree/master/example) for fancier things:
 
 ``` shell
-$ npm install
 $ npm run example
 ```
 
 ## Test
 ``` shell
 $ npm run test-local
+$ # to run the tests at sauce, open a sauce-connect tunnel and do:
 $ SAUCE_USERNAME=x SAUCE_ACCESS_KEY=y npm run test
 ```
 
 ## Require
 
-#### `var Router = require('uri-router')`
-Returns a constructor function for creating routers. The first time `uri-router` is required, it will globally hijack all link clicks and form submissions targeting the origin and start listening for the `popstate` event.
+### `var Router = require('uri-router')`
+Returns a function for creating routers. The first time `uri-router` is required, it will globally hijack all link clicks and form submissions targeting the origin and start listening for the `popstate` event.
 
 ## Static methods
 It's critical you do not use `window.history.{pushState,replaceState,go,back}()` directly! Use the static methods listed here instead.
 
-#### `Router.push(location, [replace])`  
+### `Router.push(location, [replace])`  
 Update `window.location`.
   * `location` String
   * `replace` Boolean; indicates to use replaceState instead of pushState
 
-#### `Router.replace(location)`
+### `Router.replace(location)`
 Shortcut for `Router.push(location, true)`.
 
-#### `Router.pop()`
-Like `window.history.back()`.
+### `Router.pop()`
+Like `window.history.back()` put queued properly.
 
-#### `Router.search(query, [replace])`  
-Update `window.location.search` without clobbering existing parameters.
+### `Router.search(query, [replace])`  
+Update `window.location.search` without clobbering the existing query.
 > example: assuming the search string is set to `?a=1`, calling `Router.search({ b: 2 })` would change it to `?a=1&b=2`.
 
 ## Instance methods
 
-#### `var r = Router(opts)`
-The constructor function. `opts` is augmented, tracked and returned as `r`. see [properties](#properties) for more details.
+### `var r = Router(opts)`
+The constructor. `opts` is augmented, tracked and returned as `r`. Beware, `r` is NOT actually an instance of `Router`! I am open to changing this if there is a good reason.
 
-#### `r.destroy()`
+### `r.destroy()`
 Hide any active views and stop the instance from updating on `{push,replace,pop}state`.
 
 ## Instance properties
 
-#### `r.watch`
+### `r.watch`
 Should be set to the name of a property on `window.location`, generally "pathname" or "hash"
 
-#### `r.routes`
-An array of regex / handler pairs like: `['regex', handler]`. The handler signature is `(uri, next)`. Handlers that call `next` are treated as middleware and fall through to succeeding routes. Handlers that return a value are treated as view constructors.
-> views returned by route handlers can optionally define `show()` and `hide()` methods, see [delegated events](#delegated-events) for more details.
+### `r.routes`
+An array of regex / handler pairs like: `['regex', handler]`. The handler can be an instance of HTMLElement, a newable constructor that inherits from HTMLElement, or a function with signature `(uri, next)`. Handlers that are plain functions should either call `next` to be treated as middleware (falling through to succeeding routes) or return an instance of HTMLElement, but not both.
+> views generated by route handlers can optionally define `show()` and `hide()` methods, see [lifecycle hooks](#lifecycle-hooks) for more details.
 
-#### `r.outlet`
-An optional DOM element. If an outlet is specified, handlers that return a view will trigger the removal of any existing view and the appending of the new view. If the same handler is matched more than once in a row, and `handler.reusable === true`, the existing view will simply get a delegated `show()` event rather than being replaced.
+### `r.outlet`
+An optional DOM element. If an outlet is specified, location changes will trigger the removal of any existing elements, and the appending of any elements generated by the matched handler. If the same handler is matched more than once in a row, and `handler.reusable === true`, the existing view will simply get a `show()` hook rather than being removed and created again from scratch.
 
-#### `r.base`
-An optional prefix to ignore for `r.watch`. Useful for building modular views with nested routers.
+### `r.base`
+An optional prefix to ignore for `r.watch`. Useful for building abstract views with nested routers.
 
-## Delegated events
+## Lifecycle hooks
 Any time `window.location` changes, all active views should expect to receive one or more of the following (optional) hooks:
 
-#### `view.show(uri)`
-Called on all active views when `window.location` changes. See [URI](#URI) for properties available on `uri`.
+### `view.show(uri)`
+Called on all active views when `window.location` changes. See [URI Properties](#uri-properties) for properties available on `uri`.
 
-#### `view.hide(uri, cb)`
-Called after a view becomes inactive, but just before it is removed from the DOM. If the hide implementation accepts a callback, the router will defer removal from the DOM until the callback is executed.
+### `view.hide(uri, cb)`
+Called after a view becomes inactive, but just before it is removed from the DOM. If the hide implementation accepts a callback, (and the router specifies an `outlet`) the router will defer removing the view from the DOM until the callback is executed.
 
 ## URI properties
-`URI` objects are passed to route handlers and [delegated event](#delegated-events) hooks. They define most of the properties described in the `URL` [spec](https://url.spec.whatwg.org) and some `Router` specific properties described here:
+`URI` objects are passed to route handlers and [lifecycle hooks](#lifecycle-hooks). They define most of the properties described in the [URL spec](https://url.spec.whatwg.org) and some `Router` specific properties described here:
 
-#### `init`
+### `init`
 True when `history.state` is the same as when the page initially loaded.
 
-#### `back`
+### `back`
 True when the browser's back button has been clicked or `Router.pop()` was called.
 
-#### `replace`
+### `replace`
 True when `Router.replace` initiated the location change.
 
-#### `base`
+### `base`
 If there are any capture groups in the route regex, this will be set to the value of the first group. You can use this to set `r.base` on nested routers.
 
-#### `params`
+### `params`
 An array of the capture group values from the route regex, excepting the first group, which is considered the `base` - see above.
 
-#### `query`
+### `query`
 A parsed querystring object.
 
 ## Releases
