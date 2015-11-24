@@ -76,7 +76,7 @@ About.prototype.createdCallback = function () {
   shadow.innerHTML = '<h1>About</h1>'
 }
 
-document.registerElement('about-component', About)
+module.exports = document.registerElement('about-component', About)
 ```
 
 signup.js (a view that handles adding and removing itself from the DOM)
