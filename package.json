@@ -19,7 +19,6 @@
     "build-js": "github:jessetane/build-js",
     "hyperglue2": "^2.0.0",
     "hyperquest": "^1.2.0",
-    "inherits": "^2.0.1",
     "tape": "^4.2.2"
   },
   "repository": "http://github.com/jessetane/uri-router.git",
