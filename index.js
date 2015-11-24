@@ -215,16 +215,13 @@ function update (router, routes, uri, middlewareDidRun) {
   } else if (typeof handler === 'function') {
     if (handler.prototype instanceof window.HTMLElement) {
       next = new handler()
-    } else if (handler.length < 2) {
-      next = handler(uri)
     } else {
-      handler(uri, function () {
+      next = handler(uri, function () {
         routes = routes.filter(function (route) {
           return route[1] !== handler
         })
         update(router, routes, uri, true)
       })
-      return
     }
   }
   if (next) {
