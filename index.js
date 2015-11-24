@@ -188,7 +188,7 @@ function update (router, routes, uri, middlewareDidRun) {
     watched = watched.slice(router.base.length)
   }
   var match = matchroute(watched, routes)
-  var constructor = match && match.handler
+  var handler = match && match.handler
   uri = middlewareDidRun ? uri : URI(uri)
   uri[router.watch] = watched
   if (match) {
@@ -197,26 +197,42 @@ function update (router, routes, uri, middlewareDidRun) {
   }
   var last = router.current
   if (last) {
-    if (last._constructor === constructor && constructor.reusable) {
+    if (last === handler || (last['uri-router-constructor'] === handler && handler.reusable)) {
       if (last.show) last.show(uri)
       return
     }
   }
-  if (!constructor) {
+  if (!handler) {
     if (last) {
       delete router.current
       hide(last, router.outlet, uri)
     }
     return
   }
-  var next = constructor(uri, function () {
-    routes = routes.filter(function (route) {
-      return route[1] !== constructor
-    })
-    update(router, routes, uri, true)
-  })
+  var next = null
+  if (handler instanceof window.HTMLElement) {
+    next = handler
+  } else if (typeof handler === 'function') {
+    if (handler.prototype instanceof window.HTMLElement) {
+      next = new handler()
+    } else if (handler.length < 2) {
+      next = handler(uri)
+    } else {
+      handler(uri, function () {
+        routes = routes.filter(function (route) {
+          return route[1] !== handler
+        })
+        update(router, routes, uri, true)
+      })
+      return
+    }
+  }
   if (next) {
-    next._constructor = constructor
+    if (next !== handler) {
+      Object.defineProperty(next, 'uri-router-constructor', {
+        value: handler
+      })
+    }
     router.current = next
     if (router.outlet) {
       if (last && uri.back) {
