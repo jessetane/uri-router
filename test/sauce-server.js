@@ -4,6 +4,13 @@ var request = require('hyperquest')
 
 process.env.SAUCE = 'true'
 
+// only update the sauce badge for commits on master
+if (process.env.TRAVIS_BUILD_NUMBER &&
+    process.env.TRAVIS_BRANCH === 'master' &&
+    !process.TRAVIS_PULL_REQUEST) {
+   process.env.UPDATE_SAUCE_BADGE = process.env.TRAVIS_BUILD_NUMBER
+}
+
 var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY).toString('base64')
 var platforms = {}
 
@@ -33,7 +40,7 @@ function runTests () {
   var data = ''
   var body = {
     url: 'http://localhost:' + server.port,
-    build: process.env.TRAVIS_BUILD_NUMBER || String(Math.random()).slice(2),
+    build: process.env.UPDATE_SAUCE_BADGE,
     framework: 'custom',
     platforms: [
       ['linux',       'googlechrome',         ''],
