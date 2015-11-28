@@ -39,9 +39,9 @@ function runTests () {
       ['linux',       'googlechrome',         ''],
       ['linux',       'firefox',              ''],
       ['',            'iphone',            '9.1'],
-      ['',            'iphone',            '8.4'],
+      ['',            'iphone',            '5.1'],
       ['',            'safari',              '9'],
-      ['',            'safari',              '8'],
+      ['',            'safari',              '6'],
       ['windows 10',  'microsoftedge',        ''],
       ['windows 10',  'internet explorer',  '11'],
       ['windows 8',   'internet explorer',  '10']
