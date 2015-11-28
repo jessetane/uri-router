@@ -1,4 +1,4 @@
-# uri-router [![npm](http://img.shields.io/npm/v/uri-router.svg?style=flat-square)](http://www.npmjs.org/uri-router) [![tests](https://img.shields.io/travis/jessetane/uri-router.svg?style=flat-square&branch=master)](https://travis-ci.org/jessetane/uri-router)
+# uri-router [![npm](http://img.shields.io/npm/v/uri-router.svg?style=flat-square)](http://www.npmjs.org/uri-router) [![tests](https://img.shields.io/travis/jessetane/uri-router/master.svg)](https://travis-ci.org/jessetane/uri-router)
 A small framework for building URI driven DOM applications.
 
 [![saucelabs](https://saucelabs.com/browser-matrix/uri-router.svg)](https://saucelabs.com/u/uri-router)
