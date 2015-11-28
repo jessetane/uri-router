@@ -45,6 +45,8 @@ function runTests () {
     platforms: [
       ['linux',       'googlechrome',         ''],
       ['linux',       'firefox',              ''],
+      ['android',     'android',           '5.1'],
+      ['android',     'android',           '4.3'],
       ['',            'iphone',            '9.1'],
       ['',            'iphone',            '5.1'],
       ['',            'safari',              '9'],
