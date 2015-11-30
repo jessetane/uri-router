@@ -15,7 +15,7 @@ var auth = 'Basic ' + Buffer(process.env.SAUCE_USERNAME + ':' + process.env.SAUC
 var platforms = {}
 
 var server = http({
-  share: 'test'
+  root: 'test'
 }, function (err) {
   if (err) throw err
   console.log('test server listening on port ' + server.port)

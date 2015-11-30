@@ -15,8 +15,8 @@
     "example": "node example/server"
   },
   "devDependencies": {
-    "app-server": "github:jessetane/app-server",
-    "build-js": "github:jessetane/build-js",
+    "app-server": "github:jessetane/app-server#3.0.1",
+    "build-js": "github:jessetane/build-js#2.0.0",
     "hyperglue2": "^2.0.0",
     "hyperquest": "^1.2.0",
     "tape": "^4.2.2"

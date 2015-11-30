@@ -12,7 +12,7 @@ js.watch(function (err) {
 })
 
 var server = http({
-  share: 'test'
+  root: 'test'
 }, function (err) {
   if (err) throw err
   console.log('test server listening on port ' + server.port)
