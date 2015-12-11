@@ -12,7 +12,6 @@ tape('initial', function (t) {
   t.plan(2)
 
   var r = router({
-    watch: 'pathname',
     routes: [
       ['.*', any]
     ]
@@ -29,7 +28,6 @@ tape('recursive push / pop', function (t) {
   t.plan(6)
 
   var r = router({
-    watch: 'pathname',
     routes: [
       ['.*', any]
     ]
@@ -58,7 +56,6 @@ tape('synchronous navigation order is correct', function (t) {
   t.plan(1)
 
   var r = router({
-    watch: 'pathname',
     routes: [
       ['.*', any]
     ]
@@ -91,7 +88,6 @@ tape('back and forward buttons order is correct', function (t) {
   t.plan(1)
 
   var r = router({
-    watch: 'pathname',
     routes: [
       ['.*', any]
     ]
@@ -134,7 +130,6 @@ tape('replace', function (t) {
   t.plan(1)
 
   var r = router({
-    watch: 'pathname',
     routes: [
       ['.*', any]
     ]
@@ -414,7 +409,6 @@ tape('search', function (t) {
   t.plan(1)
 
   var r = router({
-    watch: 'pathname',
     routes: [
       ['.*', any]
     ]

@@ -92,6 +92,7 @@ function search (query, replace) {
 
 function Router (opts) {
   var router = opts
+  router.watch = opts.watch || 'href'
   router.base = opts.base || ''
   router.destroy = destroy
   queue.push(router)
