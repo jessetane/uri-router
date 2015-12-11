@@ -28,7 +28,6 @@ var about = require('./about')
 var contact = require('./contact')
 
 router({
-  watch: 'pathname',
   routes: [
     ['.*', nav]
   ]
@@ -176,7 +175,7 @@ Called after a view becomes inactive, but just before it is removed from the DOM
 `URI` objects are passed to route handlers and [lifecycle hooks](#lifecycle-hooks). They define most of the properties described in the [URL spec](https://url.spec.whatwg.org) and some `Router` specific properties described here:
 
 ### `init`
-True when `history.state` is the same as when the page initially loaded.
+True when `window.location` has not changed since the page loaded.
 
 ### `back`
 True when the browser's back button has been clicked or `Router.pop()` was called.
@@ -194,6 +193,10 @@ An array of the capture group values from the route regex, excepting the first g
 A parsed querystring object.
 
 ## Releases
+* [2.x](https://github.com/jessetane/uri-router/releases)
+  * Changed `uri.init` semantics
+  * Expose the current uri
+  * Set default watch property to "href"
 * [1.x](https://github.com/jessetane/uri-router/releases)
   * Complete rewrite, November 2015 after a year+ of use in production.
 * [0.x](https://github.com/jessetane/uri-router/releases)
