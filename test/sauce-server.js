@@ -108,6 +108,9 @@ function reviewTests (tests) {
         console.log(name + ' - ' + status)
       }
     } else if (result !== undefined) {
+      if (typeof result === 'string') {
+        throw new Error(JSON.stringify(test, null, 2))
+      }
       complete++
       if (platform.result === undefined) {
         platform.result = result.passed === result.total
