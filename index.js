@@ -4,6 +4,7 @@ Router.push = push
 Router.replace = replace
 Router.pop = pop
 Router.search = search
+Router.uri = null
 
 var hijack = require('./lib/hijack')
 var matchroute = require('./lib/match-route')
@@ -15,7 +16,7 @@ var updateNeeded = false
 var routers = []
 var queue = []
 var uris = []
-var lastUri = URI(window.location)
+var lastUri = Router.uri = URI(window.location)
 lastUri.init = true
 
 // hijack link clicks and form submissions
@@ -148,7 +149,7 @@ function onchange () {
     onchange()
     return
   }
-  lastUri = uri
+  Router.uri = lastUri = uri
   if (uri.popstate !== undefined) {
     uri.back = uri.popstate < state
     state = uri.popstate
