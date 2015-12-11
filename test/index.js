@@ -46,7 +46,7 @@ tape('recursive push / pop', function (t) {
       t.equal(uri.pathname, '/a')
       router.pop()
     } else if (n === 2) {
-      t.equal(uri.init, true)
+      t.equal(uri.init, false)
       t.equal(uri.pathname, '/')
       r.destroy()
     }

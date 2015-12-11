@@ -160,7 +160,7 @@ function onchange () {
       window.history.pushState(++state, null, uri.href)
     }
   }
-  uri.init = state === 0
+  uri.init = uri.init || false
   routers.forEach(function (router) {
     update(router, router.routes, uri)
   })
