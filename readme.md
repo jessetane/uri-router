@@ -199,14 +199,16 @@ An array of the capture group values from the route regex, excepting the first g
 A parsed querystring object.
 
 ## Releases
+* [3.x](https://github.com/jessetane/uri-router/releases)
+  * Changed `uri.base` semantics and added a corresponding `uri.top` property
 * [2.x](https://github.com/jessetane/uri-router/releases)
   * Changed `uri.init` semantics
   * Expose the current uri
   * Set default watch property to "href"
 * [1.x](https://github.com/jessetane/uri-router/releases)
-  * Complete rewrite, November 2015 after a year+ of use in production.
+  * Complete rewrite, November 2015
 * [0.x](https://github.com/jessetane/uri-router/releases)
-  * Initial prototype, August 2014.
+  * Initial prototype, August 2014
 
 ## License
 Copyright © 2014 Jesse Tane <jesse.tane@gmail.com>
