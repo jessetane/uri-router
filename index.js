@@ -192,6 +192,7 @@ function update (router, routes, uri, middlewareDidRun) {
   var match = matchroute(watched, routes)
   var handler = match && match.handler
   uri = middlewareDidRun ? uri : URI(uri)
+  uri.watch = router.watch
   uri[router.watch] = watched
   if (match) {
     uri.base = router.base + match.base
