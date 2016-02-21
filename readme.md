@@ -187,6 +187,9 @@ True when `Router.replace` initiated the location change.
 Alias for the dispatching router's `watch` property.
 
 ### `base`
+Alias for the dispatching router's `base` property.
+
+### `top`
 If there are any capture groups in the route regex, this will be set to the value of the first group. You can use this to set `r.base` on nested routers.
 
 ### `params`

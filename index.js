@@ -194,8 +194,9 @@ function update (router, routes, uri, middlewareDidRun) {
   uri = middlewareDidRun ? uri : URI(uri)
   uri.watch = router.watch
   uri[router.watch] = watched
+  uri.base = router.base
   if (match) {
-    uri.base = router.base + match.base
+    uri.top = router.base + match.base
     uri.params = match.params
   }
   var last = router.current

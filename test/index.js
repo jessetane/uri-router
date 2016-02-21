@@ -157,7 +157,7 @@ tape('replace', function (t) {
 })
 
 tape('nesting', function (t) {
-  t.plan(4)
+  t.plan(7)
 
   router.push('/a/42')
 
@@ -172,20 +172,23 @@ tape('nesting', function (t) {
   var nested = {
     watch: 'pathname',
     routes: [
-      ['/42', second]
+      ['(/42)', second]
     ]
   }
 
   function first (uri) {
     t.equal(uri.pathname, '/a/42')
-    t.equal(uri.base, '/a')
-    nested.base = uri.base
+    t.equal(uri.base, '')
+    t.equal(uri.top, '/a')
+    nested.base = uri.top
     nested = router(nested)
     router.push('/')
   }
 
   function second (uri) {
     t.equal(uri.pathname, '/42')
+    t.equal(uri.base, '/a')
+    t.equal(uri.top, '/a/42')
   }
 
   function third (uri) {
