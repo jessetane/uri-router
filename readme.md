@@ -62,7 +62,7 @@ home.js (a plain DOM element as a view)
 ``` js
 module.exports = function () {
   var el = document.createElement('H1')
-  el.innerHTML = '<h1>Home</h1>'
+  el.textContent = 'Home'
   return el
 }
 ```
