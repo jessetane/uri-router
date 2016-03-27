@@ -58,7 +58,7 @@ function onclick (evt, target) {
   uri = URI(uri)
   if (uri.origin !== window.location.origin) return
   evt.preventDefault()
-  push(uri)
+  push(uri, Router.replaceOnClick)
 }
 
 function push (uri, replace) {
