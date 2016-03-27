@@ -199,6 +199,8 @@ An array of the capture group values from the route regex, excepting the first g
 A parsed querystring object.
 
 ## Releases
+* [3.0.1](https://github.com/jessetane/uri-router/releases)
+  * Added option `Router.replaceOnClick` to replace instead of push by default when handling link clicks
 * [3.x](https://github.com/jessetane/uri-router/releases)
   * Changed `uri.base` semantics and added a corresponding `uri.top` property
 * [2.x](https://github.com/jessetane/uri-router/releases)
