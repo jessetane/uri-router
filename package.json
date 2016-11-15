@@ -1,6 +1,6 @@
 {
   "name": "uri-router",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "A small framework for building URI driven DOM applications",
   "keywords": [
     "router",
