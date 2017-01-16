@@ -36,7 +36,7 @@ window.history.replaceState(
 function onpopstate (evt) {
   var uri = URI(window.location)
   uri.popstate = evt.state
-  if (uri.popstate < state) {
+  if (uri.popstate <= state) {
     uris.unshift(uri)
     locked = false
     onchange()
