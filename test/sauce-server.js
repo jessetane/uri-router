@@ -46,7 +46,7 @@ function runTests () {
       ['linux',       'chrome',               ''],
       ['linux',       'firefox',              ''],
       ['android',     'android',           '5.1'],
-      ['android',     'android',           '4.3'],
+      ['android',     'android',           '4.4'],
       ['',            'iphone',           '10.0'],
       ['',            'iphone',            '8.1'],
       ['',            'safari',              '9'],
